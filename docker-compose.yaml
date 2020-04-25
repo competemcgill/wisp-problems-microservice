@@ -1,0 +1,22 @@
+version: "3"
+services:
+  api:
+    image: node:11.13.0-alpine
+    container_name: api
+    volumes:
+      - .:/app
+    environment:
+      - NODE_ENV=dev
+    working_dir: /app
+    command: npm run start:local
+    ports:
+      - 3000:3000
+    links:
+      - mongo
+  mongo:
+    container_name: mongo
+    image: mongo
+    logging:
+      driver: none
+    ports:
+      - 27017:27017
