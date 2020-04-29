@@ -3,9 +3,22 @@ import { IProblem } from "../../interfaces/IProblem";
 
 export interface IProblemModel extends IProblem, Document { }
 
-const problemSchema: Schema = new Schema({
-    stuff: String
-},
+const problemSchema: Schema = new Schema(
+    {
+        source: {
+            type: String,
+            enum: ["CODEFORCES", "OTHER"],
+        },
+        problemID: String,
+        sourceLink: String,
+        problemSetID: {
+            type: Schema.Types.ObjectId,
+            ref: "Problem"
+        },
+        problemMetadata: {
+            platformProblemID: String
+        },
+    },
     {
         timestamps: true
     }
