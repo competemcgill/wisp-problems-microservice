@@ -9,17 +9,17 @@ const problemSchema: Schema = new Schema(
             type: String,
             enum: ["CODEFORCES", "OTHER"],
         },
-        problemID: {
+        problemId: {
             type: String,
             index: true
         },
         sourceLink: String,
-        problemSetID: {
+        problemSetId: {
             type: Schema.Types.ObjectId,
             ref: "Problem"
         },
         problemMetadata: {
-            platformProblemID: String
+            platformProblemId: String
         },
     },
     {

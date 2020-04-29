@@ -4,11 +4,11 @@ export enum PlatformName {
 
 export interface IProblem {
     source: PlatformName;
-    problemID: String;
+    problemId: String;
     sourceLink: String;
-    problemSetID: String;
+    problemSetId: String;
     problemMetadata: {
-        platformProblemID: String;
+        platformProblemId: String;
         // TODO: add difficulty (different depending on platform)
     }
 }
