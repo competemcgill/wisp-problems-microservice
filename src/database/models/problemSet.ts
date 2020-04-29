@@ -7,7 +7,10 @@ const problemSetSchema: Schema = new Schema(
     {
         title: String,
         description: String,
-        tags: [String]
+        tags: {
+            type: [String],
+            index: true
+        }
     },
     {
         timestamps: true

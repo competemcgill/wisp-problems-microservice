@@ -9,7 +9,10 @@ const problemSchema: Schema = new Schema(
             type: String,
             enum: ["CODEFORCES", "OTHER"],
         },
-        problemID: String,
+        problemID: {
+            type: String,
+            index: true
+        },
         sourceLink: String,
         problemSetID: {
             type: Schema.Types.ObjectId,
