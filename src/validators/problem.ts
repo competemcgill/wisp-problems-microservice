@@ -1,4 +1,5 @@
 import { body, param, ValidationChain } from "express-validator/check";
+import { isString } from "util";
 
 export function problemValidator(method: string): ValidationChain[] {
     switch (method) {
@@ -12,13 +13,19 @@ export function problemValidator(method: string): ValidationChain[] {
         }
         case "POST /problems": {
             return [
-                body("stuff", "Invalid or missing 'stuff'").exists()
+                body("source", "Invalid or missing 'source'").isString().exists(),
+                body("sourceLink", "Invalid or missing 'sourceLink'").isString().exists(),
+                body("problemSetId", "Invalid or missing 'problemSetId'").isString().exists(),
+                body("problemMetadata", "Invalid or missing 'problemMetadata' (optional)").optional()
             ];
         }
         case "PUT /problems/:problemId": {
             return [
                 param("problemId", "Invalid or missing ':problemId'").exists().isMongoId(),
-                body("stuff", "Invalid or missing 'stuff'").exists()
+                body("source", "Invalid or missing 'source'").isString().exists(),
+                body("sourceLink", "Invalid or missing 'sourceLink'").isString().exists(),
+                body("problemSetId", "Invalid or missing 'problemSetId'").isString().exists(),
+                body("problemMetadata", "Invalid or missing 'problemMetadata' (optional)").optional()
             ];
         }
         case "DELETE /problems/:problemId": {
