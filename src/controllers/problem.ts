@@ -5,6 +5,7 @@ import { IProblem } from "../interfaces/IProblem";
 import { validationResult } from "express-validator/check";
 import { errorMessage } from "../config/errorFormatter";
 import { statusCodes } from "../config/statusCodes";
+import { calculateProblemHash } from "../util/hash";
 
 const problemController = {
 
@@ -32,6 +33,10 @@ const problemController = {
         }
     },
 
+    exists: async (req: Request, res: Response) => {
+        // TODO: Fill this out
+    },
+
     create: async (req: Request, res: Response) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -40,6 +45,7 @@ const problemController = {
             try {
                 const problemData: IProblem = {
                     ...req.body,
+                    problemId: calculateProblemHash(req.body.problemId, req.body.source)
                 };
                 let newProblem: IProblemModel = await problemDBInteractions.create(new Problem(problemData));
                 newProblem = newProblem.toJSON();
@@ -63,6 +69,7 @@ const problemController = {
                 else {
                     const updatedProblemBody: IProblem = {
                         ...req.body,
+                        problemId: calculateProblemHash(req.body.problemId, req.body.source)
                     };
 
                     const updatedProblem: IProblemModel = await problemDBInteractions.update(problemId, updatedProblemBody);
