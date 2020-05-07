@@ -8,8 +8,7 @@ const problemSetSchema: Schema = new Schema(
         title: String,
         description: String,
         tags: {
-            type: [String],
-            index: true
+            type: [String]
         }
     },
     {
