@@ -7,6 +7,7 @@ import { Application, Request, Response } from "express";
 import { requestLoggerConfig } from "./config/requestLogger";
 import { errorLoggerConfig } from "./config/errorLogger";
 import { problemRouter } from "./routes/problem";
+import { problemSetRouter } from "./routes/problemSet";
 
 export const port: Number = parseInt(process.env.SERVER_PORT) || 3000;
 const app: Application = express();
@@ -18,7 +19,9 @@ if (process.env.NODE_ENV != "test") app.use(errorLoggerConfig);
 app.use(bodyParser.json());
 if (process.env.NODE_ENV == "dev") app.use(bodyParser.urlencoded({ extended: true }));
 if (process.env.NODE_ENV != "production") swaggerDoc(app);
+
 app.use("/problems", problemRouter);
+app.use("/problemSets", problemSetRouter);
 
 const env = process.env.NODE_ENV || "dev";
 

@@ -2,13 +2,18 @@ export enum PlatformName {
     CODEFORCES, OTHER
 }
 
+export enum Difficulty {
+    easy, medium, hard
+}
+
 export interface IProblem {
+    title: String;
     source: PlatformName;
     problemId: String;
     sourceLink: String;
-    problemSetId: String;
+    problemSetIds: [String];
     problemMetadata: {
         platformProblemId: String;
-        // TODO: add difficulty (different depending on platform)
+        difficulty: Difficulty;
     }
 }
