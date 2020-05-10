@@ -1,0 +1,5 @@
+site_name: WISP Problems Microservice
+nav:
+    - Getting Started: getting_started.md
+    - Sample Usage: sample_usage.md
+theme: readthedocs
