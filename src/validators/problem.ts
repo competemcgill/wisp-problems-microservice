@@ -1,5 +1,4 @@
-import { body, param, ValidationChain, query } from "express-validator/check";
-import { isString } from "util";
+import { body, param, ValidationChain } from "express-validator/check";
 
 export function problemValidator(method: string): ValidationChain[] {
     switch (method) {
@@ -33,6 +32,11 @@ export function problemValidator(method: string): ValidationChain[] {
         case "DELETE /problems/:problemId": {
             return [
                 param("problemId", "Invalid or missing ':problemId'").exists().isMongoId()
+            ];
+        }
+        case "GET /problems/:generatedProblemId/exists": {
+            return [
+                param("generatedProblemId", "Invalid or missing ':generatedProblemId'").exists()
             ];
         }
     }

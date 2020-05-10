@@ -25,6 +25,10 @@ export const problemDBInteractions = {
         return Problem.findOne({ problemId: hash }).exec();
     },
 
+    findByGeneratedId: (generatedProblemId: string): Promise<IProblemModel> => {
+        return Problem.findOne({ problemId: generatedProblemId }).exec();
+    },
+
     update: (problemId: string, newProblem: IProblem): Promise<IProblemModel> => {
         return Problem.findByIdAndUpdate(problemId, newProblem, { new: true }).exec();
     },
