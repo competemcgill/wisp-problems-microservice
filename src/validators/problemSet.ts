@@ -1,13 +1,16 @@
-import { body, param, ValidationChain } from "express-validator/check";
+import { body, param, ValidationChain, query } from "express-validator/check";
 
 export function problemSetValidator(method: string): ValidationChain[] {
     switch (method) {
         case "GET /problemSets": {
-            return [];
+            return [
+                query("includeProblems", "can be set to 'true' to include problems").optional().isBoolean()
+            ];
         }
         case "GET /problemSets/:problemSetId": {
             return [
-                param("problemSetId", "Invalid or missing ':problemSetId'").exists().isMongoId()
+                param("problemSetId", "Invalid or missing ':problemSetId'").exists().isMongoId(),
+                query("includeProblems", "can be set to 'true' to include problems").optional().isBoolean()
             ];
         }
         case "POST /problemSets": {

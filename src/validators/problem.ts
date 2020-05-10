@@ -1,4 +1,4 @@
-import { body, param, ValidationChain } from "express-validator/check";
+import { body, param, ValidationChain, query } from "express-validator/check";
 import { isString } from "util";
 
 export function problemValidator(method: string): ValidationChain[] {
