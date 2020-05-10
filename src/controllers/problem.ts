@@ -34,7 +34,18 @@ const problemController = {
     },
 
     exists: async (req: Request, res: Response) => {
-        // TODO: Fill this out
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            res.status(statusCodes.MISSING_PARAMS).json(errors.formatWith(errorMessage).array()[0]);
+        } else {
+            try {
+                const generatedProblemId: string = req.params.generatedProblemId;
+                const problem: IProblemModel = await problemDBInteractions.findByGeneratedId(generatedProblemId);
+                problem ? res.status(statusCodes.SUCCESS).send(problem) : res.status(statusCodes.NOT_FOUND).send({ status: statusCodes.NOT_FOUND, message: "Problem not found" });
+            } catch (error) {
+                res.status(statusCodes.SERVER_ERROR).send(error);
+            }
+        }
     },
 
     create: async (req: Request, res: Response) => {

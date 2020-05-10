@@ -16,9 +16,17 @@ export const problemDBInteractions = {
         return Problem.findOne({ _id: problemId }).exec();
     },
 
+    listByProblemSet: (problemSetIds: string): Promise<IProblemModel[]> => {
+        return Problem.find({ problemSetIds: problemSetIds }).exec();
+    },
+
     findByProblemNumberAndPlatform: (problemNumber: string, platform: string): Promise<IProblemModel> => {
         const hash = calculateProblemHash(problemNumber, platform)
         return Problem.findOne({ problemId: hash }).exec();
+    },
+
+    findByGeneratedId: (generatedProblemId: string): Promise<IProblemModel> => {
+        return Problem.findOne({ problemId: generatedProblemId }).exec();
     },
 
     update: (problemId: string, newProblem: IProblem): Promise<IProblemModel> => {
