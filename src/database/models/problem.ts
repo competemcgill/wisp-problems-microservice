@@ -15,10 +15,10 @@ const problemSchema: Schema = new Schema(
             index: true
         },
         sourceLink: String,
-        problemSetId: {
+        problemSetIds: [{
             type: Schema.Types.ObjectId,
             ref: "Problem"
-        },
+        }],
         problemMetadata: {
             platformProblemId: String,
             difficulty: {
