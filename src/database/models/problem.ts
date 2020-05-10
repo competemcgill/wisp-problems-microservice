@@ -5,6 +5,7 @@ export interface IProblemModel extends IProblem, Document { }
 
 const problemSchema: Schema = new Schema(
     {
+        title: String,
         source: {
             type: String,
             enum: ["CODEFORCES", "OTHER"],
@@ -19,7 +20,11 @@ const problemSchema: Schema = new Schema(
             ref: "Problem"
         },
         problemMetadata: {
-            platformProblemId: String
+            platformProblemId: String,
+            difficulty: {
+                type: String,
+                enum: ["easy", "medium", "hard"]
+            }
         },
     },
     {
