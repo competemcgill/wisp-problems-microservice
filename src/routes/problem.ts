@@ -14,4 +14,6 @@ problemRouter.put("/:problemId", problemValidator("PUT /problems/:problemId"), p
 
 problemRouter.delete("/:problemId", problemValidator("DELETE /problems/:problemId"), problemController.delete);
 
+problemRouter.get("/:generatedProblemId/exists", problemValidator("GET /problems/:generatedProblemId/exists"), problemController.exists);
+
 export { problemRouter };
