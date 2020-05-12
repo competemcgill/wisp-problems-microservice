@@ -1,0 +1,39 @@
+name: Build and Deploy to GKE
+
+on:
+  release:
+    types: [created]
+
+# Environment variables available to all jobs and steps in this workflow
+env:
+  GITHUB_SHA: ${{ github.sha }}
+  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+  DOCKER_ORGANIZATION: ${{ secrets.DOCKER_ORGANIZATION }} 
+  IMAGE: wisp-problems
+
+jobs:
+  setup-build-publish-deploy:
+    name: Setup, Build, Publish, and Deploy
+    runs-on: ubuntu-latest
+    steps:
+
+    # Checkout Commit
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    # Build the Docker image
+    - name: Build
+      run: |        
+        docker build -t "$DOCKER_ORGANIZATION"/"$IMAGE":"$GITHUB_SHA" \
+          --build-arg GITHUB_SHA="$GITHUB_SHA" \
+          --build-arg GITHUB_REF="$GITHUB_REF" .
+        docker tag "$DOCKER_ORGANIZATION"/"$IMAGE":"$GITHUB_SHA" "$DOCKER_ORGANIZATION"/"$IMAGE":latest
+
+    # Push the Docker image to Google Container Registry
+    - name: Publish
+      run: |
+        docker login -u=$DOCKER_USERNAME -p=$DOCKER_PASSWORD 
+        docker push $DOCKER_ORGANIZATION/$IMAGE:$GITHUB_SHA
+        docker push $DOCKER_ORGANIZATION/$IMAGE:latest
+      env:
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
