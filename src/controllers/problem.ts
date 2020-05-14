@@ -57,13 +57,14 @@ const problemController = {
         } else {
             try {
                 let platformProblemId = req.body.problemMetadata.platformProblemId
-                if (req.body.source.toUpperCase() == "CODEFORCES") {
+                const platform = req.body.source.toUpperCase()
+                if (platform == "CODEFORCES") {
                     platformProblemId = platformProblemId.toUpperCase();
                 }
                 // TODO: add verification that the fields within the Object problemMetadata are present
                 const problemData: IProblem = {
                     ...req.body,
-                    problemId: calculateProblemHash(req.body.source.toUpperCase(), req.body.problemMetadata.platformProblemId.toUpperCase())
+                    problemId: calculateProblemHash(platform, platformProblemId)
                 };
                 let newProblem: IProblemModel = await problemDBInteractions.create(new Problem(problemData));
 
@@ -98,13 +99,19 @@ const problemController = {
                 if (!problem)
                     res.status(statusCodes.NOT_FOUND).send({ status: statusCodes.NOT_FOUND, message: "Problem not found" });
                 else {
+
                     let updatedProblemBody: IProblem = {
                         ...req.body,
                     };
 
 
                     if (req.body.source && req.body.problemMetadata && req.body.problemMetadata.platformProblemId) {
-                        const problemId: string = calculateProblemHash(req.body.source.toUpperCase(), req.body.problemMetadata.platformProblemId.toUpperCase())
+                        let platformProblemId = req.body.problemMetadata.platformProblemId
+                        const platform = req.body.source.toUpperCase()
+                        if (platform == "CODEFORCES") {
+                            platformProblemId = platformProblemId.toUpperCase();
+                        }
+                        const problemId: string = calculateProblemHash(platform, platformProblemId)
                         updatedProblemBody.problemId = problemId;
                     }
 
