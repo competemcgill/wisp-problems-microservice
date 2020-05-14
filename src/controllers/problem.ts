@@ -6,8 +6,8 @@ import { validationResult } from "express-validator/check";
 import { errorMessage } from "../config/errorFormatter";
 import { statusCodes } from "../config/statusCodes";
 import { calculateProblemHash } from "../util/hash";
-import { problemSetDBInteractions } from "database/interactions/problemSet";
-import { IProblemSetModel } from "database/models/problemSet";
+import { problemSetDBInteractions } from "../database/interactions/problemSet";
+import { IProblemSetModel } from "../database/models/problemSet";
 
 const problemController = {
 
@@ -66,7 +66,11 @@ const problemController = {
                 if (newProblem.problemSetIds && newProblem.problemSetIds.length > 0) {
                     for (const problemSetId of newProblem.problemSetIds) {
                         let currProblemSet: IProblemSetModel = await problemSetDBInteractions.find(problemSetId);
-                        currProblemSet.problemCount += 1;
+                        if (!currProblemSet.problemCount) {
+                            currProblemSet.problemCount = 1;
+                        } else {
+                            currProblemSet.problemCount += 1;
+                        }
                         currProblemSet.save();
                     }
                 }
