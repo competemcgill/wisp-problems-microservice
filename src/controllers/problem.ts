@@ -54,9 +54,10 @@ const problemController = {
             res.status(statusCodes.MISSING_PARAMS).json(errors.formatWith(errorMessage).array()[0]);
         } else {
             try {
+                // TODO: add verification that the fields within the Object problemMetadata are present
                 const problemData: IProblem = {
                     ...req.body,
-                    problemId: calculateProblemHash(req.body.problemId, req.body.source)
+                    problemId: calculateProblemHash(req.body.problemMetadata.platformProblemId, req.body.source)
                 };
                 let newProblem: IProblemModel = await problemDBInteractions.create(new Problem(problemData));
                 newProblem = newProblem.toJSON();
@@ -78,10 +79,15 @@ const problemController = {
                 if (!problem)
                     res.status(statusCodes.NOT_FOUND).send({ status: statusCodes.NOT_FOUND, message: "Problem not found" });
                 else {
-                    const updatedProblemBody: IProblem = {
+                    let updatedProblemBody: IProblem = {
                         ...req.body,
-                        problemId: calculateProblemHash(req.body.problemId, req.body.source)
                     };
+
+
+                    if (req.body.source && req.body.problemMetadata && req.body.problemMetadata.platformProblemId) {
+                        const problemId: string = calculateProblemHash(req.body.problemMetadata.platformProblemId, req.body.source)
+                        updatedProblemBody.problemId = problemId;
+                    }
 
                     const updatedProblem: IProblemModel = await problemDBInteractions.update(problemId, updatedProblemBody);
                     res.status(statusCodes.SUCCESS).send(updatedProblem);
