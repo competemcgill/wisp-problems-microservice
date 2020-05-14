@@ -59,7 +59,7 @@ const problemController = {
                 // TODO: add verification that the fields within the Object problemMetadata are present
                 const problemData: IProblem = {
                     ...req.body,
-                    problemId: calculateProblemHash(req.body.problemMetadata.platformProblemId, req.body.source)
+                    problemId: calculateProblemHash(req.body.source.toUpperCase(), req.body.problemMetadata.platformProblemId.toUpperCase())
                 };
                 let newProblem: IProblemModel = await problemDBInteractions.create(new Problem(problemData));
 
@@ -96,7 +96,7 @@ const problemController = {
 
 
                     if (req.body.source && req.body.problemMetadata && req.body.problemMetadata.platformProblemId) {
-                        const problemId: string = calculateProblemHash(req.body.problemMetadata.platformProblemId, req.body.source)
+                        const problemId: string = calculateProblemHash(req.body.source.toUpperCase(), req.body.problemMetadata.platformProblemId.toUpperCase())
                         updatedProblemBody.problemId = problemId;
                     }
 
