@@ -9,7 +9,8 @@ const problemSetSchema: Schema = new Schema(
         description: String,
         tags: {
             type: [String]
-        }
+        },
+        problemCount: Number
     },
     {
         timestamps: true

@@ -7,13 +7,13 @@ export enum Difficulty {
 }
 
 export interface IProblem {
-    title: String;
+    title: string;
     source: PlatformName;
-    problemId: String;
-    sourceLink: String;
-    problemSetIds: [String];
+    problemId: string;
+    sourceLink: string;
+    problemSetIds: string[];
     problemMetadata: {
-        platformProblemId: String;
+        platformProblemId: string;
         difficulty: Difficulty;
     }
 }

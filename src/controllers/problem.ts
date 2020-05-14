@@ -6,6 +6,8 @@ import { validationResult } from "express-validator/check";
 import { errorMessage } from "../config/errorFormatter";
 import { statusCodes } from "../config/statusCodes";
 import { calculateProblemHash } from "../util/hash";
+import { problemSetDBInteractions } from "../database/interactions/problemSet";
+import { IProblemSetModel } from "../database/models/problemSet";
 
 const problemController = {
 
@@ -54,11 +56,26 @@ const problemController = {
             res.status(statusCodes.MISSING_PARAMS).json(errors.formatWith(errorMessage).array()[0]);
         } else {
             try {
+                let platformProblemId = req.body.problemMetadata.platformProblemId
+                const platform = req.body.source.toUpperCase()
+                if (platform == "CODEFORCES") {
+                    platformProblemId = platformProblemId.toUpperCase();
+                }
+                // TODO: add verification that the fields within the Object problemMetadata are present
                 const problemData: IProblem = {
                     ...req.body,
-                    problemId: calculateProblemHash(req.body.problemId, req.body.source)
+                    problemId: calculateProblemHash(platform, platformProblemId)
                 };
                 let newProblem: IProblemModel = await problemDBInteractions.create(new Problem(problemData));
+
+
+                for (const problemSetId of newProblem.problemSetIds) {
+                    const problemCount: number = await problemDBInteractions.countInProblemSet(problemSetId);
+                    let currProblemSet: IProblemSetModel = await problemSetDBInteractions.find(problemSetId);
+                    currProblemSet.problemCount = problemCount;
+                    currProblemSet.save();
+                }
+
                 newProblem = newProblem.toJSON();
                 res.status(statusCodes.SUCCESS).send(newProblem);
             } catch (error) {
@@ -78,10 +95,28 @@ const problemController = {
                 if (!problem)
                     res.status(statusCodes.NOT_FOUND).send({ status: statusCodes.NOT_FOUND, message: "Problem not found" });
                 else {
-                    const updatedProblemBody: IProblem = {
+
+                    let updatedProblemBody: IProblem = {
                         ...req.body,
-                        problemId: calculateProblemHash(req.body.problemId, req.body.source)
                     };
+
+
+                    if (req.body.source && req.body.problemMetadata && req.body.problemMetadata.platformProblemId) {
+                        let platformProblemId = req.body.problemMetadata.platformProblemId
+                        const platform = req.body.source.toUpperCase()
+                        if (platform == "CODEFORCES") {
+                            platformProblemId = platformProblemId.toUpperCase();
+                        }
+                        const problemId: string = calculateProblemHash(platform, platformProblemId)
+                        updatedProblemBody.problemId = problemId;
+                    }
+
+                    for (const problemSetId of problem.problemSetIds) {
+                        const problemCount: number = await problemDBInteractions.countInProblemSet(problemSetId);
+                        let currProblemSet: IProblemSetModel = await problemSetDBInteractions.find(problemSetId);
+                        currProblemSet.problemCount = problemCount;
+                        currProblemSet.save();
+                    }
 
                     const updatedProblem: IProblemModel = await problemDBInteractions.update(problemId, updatedProblemBody);
                     res.status(statusCodes.SUCCESS).send(updatedProblem);
@@ -103,7 +138,13 @@ const problemController = {
                 if (!problem) {
                     res.status(statusCodes.NOT_FOUND).send({ status: statusCodes.NOT_FOUND, message: "Problem not found" });
                 } else {
-                    await problemDBInteractions.delete(problemId);
+                    const deletedProblem: IProblemModel = await problemDBInteractions.delete(problemId);
+                    for (const problemSetId of problem.problemSetIds) {
+                        const problemCount: number = await problemDBInteractions.countInProblemSet(problemSetId);
+                        let currProblemSet: IProblemSetModel = await problemSetDBInteractions.find(problemSetId);
+                        currProblemSet.problemCount = problemCount;
+                        currProblemSet.save();
+                    }
                     res.status(statusCodes.SUCCESS).send();
                 }
             } catch (error) {
