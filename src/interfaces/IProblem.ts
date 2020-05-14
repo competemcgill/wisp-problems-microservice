@@ -11,7 +11,7 @@ export interface IProblem {
     source: PlatformName;
     problemId: String;
     sourceLink: String;
-    problemSetIds: [String];
+    problemSetIds: [string];
     problemMetadata: {
         platformProblemId: String;
         difficulty: Difficulty;

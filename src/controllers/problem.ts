@@ -6,6 +6,8 @@ import { validationResult } from "express-validator/check";
 import { errorMessage } from "../config/errorFormatter";
 import { statusCodes } from "../config/statusCodes";
 import { calculateProblemHash } from "../util/hash";
+import { problemSetDBInteractions } from "database/interactions/problemSet";
+import { IProblemSetModel } from "database/models/problemSet";
 
 const problemController = {
 
@@ -60,6 +62,15 @@ const problemController = {
                     problemId: calculateProblemHash(req.body.problemMetadata.platformProblemId, req.body.source)
                 };
                 let newProblem: IProblemModel = await problemDBInteractions.create(new Problem(problemData));
+
+                if (newProblem.problemSetIds && newProblem.problemSetIds.length > 0) {
+                    for (const problemSetId of newProblem.problemSetIds) {
+                        let currProblemSet: IProblemSetModel = await problemSetDBInteractions.find(problemSetId);
+                        currProblemSet.problemCount += 1;
+                        currProblemSet.save();
+                    }
+                }
+
                 newProblem = newProblem.toJSON();
                 res.status(statusCodes.SUCCESS).send(newProblem);
             } catch (error) {
@@ -109,7 +120,14 @@ const problemController = {
                 if (!problem) {
                     res.status(statusCodes.NOT_FOUND).send({ status: statusCodes.NOT_FOUND, message: "Problem not found" });
                 } else {
-                    await problemDBInteractions.delete(problemId);
+                    const deletedProblem: IProblemModel = await problemDBInteractions.delete(problemId);
+                    if (deletedProblem.problemSetIds && deletedProblem.problemSetIds.length > 0) {
+                        for (const problemSetId of deletedProblem.problemSetIds) {
+                            let currProblemSet: IProblemSetModel = await problemSetDBInteractions.find(problemSetId);
+                            currProblemSet.problemCount -= 1;
+                            currProblemSet.save();
+                        }
+                    }
                     res.status(statusCodes.SUCCESS).send();
                 }
             } catch (error) {
