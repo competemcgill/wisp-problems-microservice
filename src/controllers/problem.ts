@@ -71,7 +71,6 @@ const problemController = {
 
                 for (const problemSetId of newProblem.problemSetIds) {
                     const problemCount: number = await problemDBInteractions.countInProblemSet(problemSetId);
-                    console.log(problemCount)
                     let currProblemSet: IProblemSetModel = await problemSetDBInteractions.find(problemSetId);
                     currProblemSet.problemCount = problemCount;
                     currProblemSet.save();
