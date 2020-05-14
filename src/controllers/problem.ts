@@ -56,6 +56,10 @@ const problemController = {
             res.status(statusCodes.MISSING_PARAMS).json(errors.formatWith(errorMessage).array()[0]);
         } else {
             try {
+                let platformProblemId = req.body.problemMetadata.platformProblemId
+                if (req.body.source.toUpperCase() == "CODEFORCES") {
+                    platformProblemId = platformProblemId.toUpperCase();
+                }
                 // TODO: add verification that the fields within the Object problemMetadata are present
                 const problemData: IProblem = {
                     ...req.body,
@@ -102,6 +106,26 @@ const problemController = {
                     if (req.body.source && req.body.problemMetadata && req.body.problemMetadata.platformProblemId) {
                         const problemId: string = calculateProblemHash(req.body.source.toUpperCase(), req.body.problemMetadata.platformProblemId.toUpperCase())
                         updatedProblemBody.problemId = problemId;
+                    }
+
+                    for (const problemSetId1 of updatedProblemBody.problemSetIds) {
+                        for (const problemSetId2 of problem.problemSetIds) {
+                            // if new problem's problemSetId isn't in the old problem's problemSetIds
+                            if (problemSetId2.indexOf(problemSetId1) === -1) {
+                                let currProblemSet: IProblemSetModel = await problemSetDBInteractions.find(problemSetId1);
+                                if (!currProblemSet.problemCount) {
+                                    currProblemSet.problemCount = 1;
+                                } else {
+                                    currProblemSet.problemCount += 1;
+                                }
+                                currProblemSet.save();
+                                // else if old problem's problemSetId isn't in the new problem's problemSetIds
+                            } else if (problemSetId1.indexOf(problemSetId2) === -1) {
+                                let currProblemSet: IProblemSetModel = await problemSetDBInteractions.find(problemSetId2);
+                                currProblemSet.problemCount -= 1;
+                                currProblemSet.save();
+                            }
+                        }
                     }
 
                     const updatedProblem: IProblemModel = await problemDBInteractions.update(problemId, updatedProblemBody);

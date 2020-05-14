@@ -1,6 +1,6 @@
 export interface IProblemSet {
-    title: String;
-    description: String;
-    tags: String[];
+    title: string;
+    description: string;
+    tags: string[];
     problemCount: number;
 }
