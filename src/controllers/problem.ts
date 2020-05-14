@@ -68,16 +68,13 @@ const problemController = {
                 };
                 let newProblem: IProblemModel = await problemDBInteractions.create(new Problem(problemData));
 
-                if (newProblem.problemSetIds && newProblem.problemSetIds.length > 0) {
-                    for (const problemSetId of newProblem.problemSetIds) {
-                        let currProblemSet: IProblemSetModel = await problemSetDBInteractions.find(problemSetId);
-                        if (!currProblemSet.problemCount) {
-                            currProblemSet.problemCount = 1;
-                        } else {
-                            currProblemSet.problemCount += 1;
-                        }
-                        currProblemSet.save();
-                    }
+
+                for (const problemSetId of newProblem.problemSetIds) {
+                    const problemCount: number = await problemDBInteractions.countInProblemSet(problemSetId);
+                    console.log(problemCount)
+                    let currProblemSet: IProblemSetModel = await problemSetDBInteractions.find(problemSetId);
+                    currProblemSet.problemCount = problemCount;
+                    currProblemSet.save();
                 }
 
                 newProblem = newProblem.toJSON();
@@ -115,24 +112,11 @@ const problemController = {
                         updatedProblemBody.problemId = problemId;
                     }
 
-                    for (const problemSetId1 of updatedProblemBody.problemSetIds) {
-                        for (const problemSetId2 of problem.problemSetIds) {
-                            // if new problem's problemSetId isn't in the old problem's problemSetIds
-                            if (problemSetId2.indexOf(problemSetId1) === -1) {
-                                let currProblemSet: IProblemSetModel = await problemSetDBInteractions.find(problemSetId1);
-                                if (!currProblemSet.problemCount) {
-                                    currProblemSet.problemCount = 1;
-                                } else {
-                                    currProblemSet.problemCount += 1;
-                                }
-                                currProblemSet.save();
-                                // else if old problem's problemSetId isn't in the new problem's problemSetIds
-                            } else if (problemSetId1.indexOf(problemSetId2) === -1) {
-                                let currProblemSet: IProblemSetModel = await problemSetDBInteractions.find(problemSetId2);
-                                currProblemSet.problemCount -= 1;
-                                currProblemSet.save();
-                            }
-                        }
+                    for (const problemSetId of problem.problemSetIds) {
+                        const problemCount: number = await problemDBInteractions.countInProblemSet(problemSetId);
+                        let currProblemSet: IProblemSetModel = await problemSetDBInteractions.find(problemSetId);
+                        currProblemSet.problemCount = problemCount;
+                        currProblemSet.save();
                     }
 
                     const updatedProblem: IProblemModel = await problemDBInteractions.update(problemId, updatedProblemBody);
@@ -156,12 +140,11 @@ const problemController = {
                     res.status(statusCodes.NOT_FOUND).send({ status: statusCodes.NOT_FOUND, message: "Problem not found" });
                 } else {
                     const deletedProblem: IProblemModel = await problemDBInteractions.delete(problemId);
-                    if (deletedProblem.problemSetIds && deletedProblem.problemSetIds.length > 0) {
-                        for (const problemSetId of deletedProblem.problemSetIds) {
-                            let currProblemSet: IProblemSetModel = await problemSetDBInteractions.find(problemSetId);
-                            currProblemSet.problemCount -= 1;
-                            currProblemSet.save();
-                        }
+                    for (const problemSetId of problem.problemSetIds) {
+                        const problemCount: number = await problemDBInteractions.countInProblemSet(problemSetId);
+                        let currProblemSet: IProblemSetModel = await problemSetDBInteractions.find(problemSetId);
+                        currProblemSet.problemCount = problemCount;
+                        currProblemSet.save();
                     }
                     res.status(statusCodes.SUCCESS).send();
                 }

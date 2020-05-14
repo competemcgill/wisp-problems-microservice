@@ -63,7 +63,7 @@ const problemSetController = {
         } else {
             try {
                 const problemSetData: IProblemSet = {
-                    ...req.body,
+                    ...req.body
                 };
                 let newProblemSet: IProblemSetModel = await problemSetDBInteractions.create(new ProblemSet(problemSetData));
                 newProblemSet = newProblemSet.toJSON();

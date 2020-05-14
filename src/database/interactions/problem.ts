@@ -16,6 +16,10 @@ export const problemDBInteractions = {
         return Problem.findOne({ _id: problemId }).exec();
     },
 
+    countInProblemSet: (problemSetId: string): Promise<number> => {
+        return Problem.countDocuments({ problemSetIds: problemSetId }).exec();
+    },
+
     listByProblemSet: (problemSetIds: string): Promise<IProblemModel[]> => {
         return Problem.find({ problemSetIds: problemSetIds }).exec();
     },
