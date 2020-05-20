@@ -47,5 +47,5 @@ export function problemValidator(method: string): ValidationChain[] {
 async function validateProblemSetIds(problemSetIds: Array<string>) {
     const promiseArray = problemSetIds.map(async problemSetId => await problemSetDBInteractions.find(problemSetId));
     const problemSetArray = await Promise.all(promiseArray);
-    return problemSetArray.filter(problemSet => problemSet === null).length === 0;
+    return !problemSetArray.some(problemSet => problemSet === null);
 }
