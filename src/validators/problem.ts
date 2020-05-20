@@ -1,4 +1,5 @@
 import { body, param, ValidationChain } from "express-validator/check";
+import {problemSetDBInteractions} from "../database/interactions/problemSet";
 
 export function problemValidator(method: string): ValidationChain[] {
     switch (method) {
@@ -16,6 +17,7 @@ export function problemValidator(method: string): ValidationChain[] {
                 body("source", "Invalid or missing 'source'").isString().exists(),
                 body("sourceLink", "Invalid or missing 'sourceLink'").isString().exists(),
                 body("problemSetIds", "Invalid or missing 'problemSetId'").isArray().exists(),
+                body("problemSetIds", "Invalid or nonexistent 'problemSetId'").custom(validateProblemSetIds),
                 body("problemMetadata", "Invalid or missing 'problemMetadata' (optional)").optional()
             ];
         }
@@ -40,4 +42,10 @@ export function problemValidator(method: string): ValidationChain[] {
             ];
         }
     }
+}
+
+async function validateProblemSetIds(problemSetIds: Array<string>) {
+    const promiseArray = problemSetIds.map(async problemSetId => await problemSetDBInteractions.find(problemSetId));
+    const problemSetArray = await Promise.all(promiseArray);
+    return problemSetArray.filter(problemSet => problemSet === null).length === 0;
 }
