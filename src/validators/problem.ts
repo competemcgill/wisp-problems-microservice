@@ -1,5 +1,5 @@
 import { body, param, ValidationChain } from "express-validator/check";
-import {problemSetDBInteractions} from "../database/interactions/problemSet";
+import { problemSetDBInteractions } from "../database/interactions/problemSet";
 
 export function problemValidator(method: string): ValidationChain[] {
     switch (method) {

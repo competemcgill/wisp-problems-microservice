@@ -3,15 +3,13 @@ services:
   api:
     image: node:11.13.0-alpine
     container_name: api
+    environment:
+      - NODE_ENV=test
+      - DB_URL=mongodb://mongo:27017/wisp
     volumes:
       - .:/app
-    environment:
-      - NODE_ENV=dev
-      - DB_URL=mongodb://mongo:27017/wisp_test
     working_dir: /app
-    command: npm run start:local
-    ports:
-      - 3000:3000
+    command: sh -c "npm i && npm run test:local"
     links:
       - mongo
   mongo:
