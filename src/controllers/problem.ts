@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { problemDBInteractions } from "../database/interactions/problem";
 import { Problem, IProblemModel } from "../database/models/problem";
-import { IProblem, Difficulty, PlatformName } from "../interfaces/IProblem";
+import { IProblem } from "../interfaces/IProblem";
 import { validationResult } from "express-validator/check";
 import { errorMessage } from "../config/errorFormatter";
 import { statusCodes } from "../config/statusCodes";
@@ -56,6 +56,7 @@ const problemController = {
             res.status(statusCodes.MISSING_PARAMS).json(errors.formatWith(errorMessage).array()[0]);
         } else {
             try {
+                // TODO: platformProblemId can throw errors if not validated
                 let platformProblemId = req.body.problemMetadata.platformProblemId;
                 const platform = req.body.source.toUpperCase();
                 if (platform == "CODEFORCES") {
