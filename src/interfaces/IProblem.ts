@@ -8,12 +8,12 @@ export enum Difficulty {
 
 export interface IProblem {
     title: string;
-    source: PlatformName;
+    source: string;
     problemId: string;
     sourceLink: string;
     problemSetIds: string[];
     problemMetadata: {
         platformProblemId: string;
-        difficulty: Difficulty;
+        difficulty: string;
     }
 }
