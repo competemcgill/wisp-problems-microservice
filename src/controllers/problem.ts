@@ -1,13 +1,13 @@
-import {Request, Response} from "express";
-import {problemDBInteractions} from "../database/interactions/problem";
-import {IProblemModel, Problem} from "../database/models/problem";
-import {IProblem} from "../interfaces/IProblem";
-import {validationResult} from "express-validator/check";
-import {errorMessage} from "../config/errorFormatter";
-import {statusCodes} from "../config/statusCodes";
-import {calculateProblemHash} from "../util/hash";
-import {problemSetDBInteractions} from "../database/interactions/problemSet";
-import {IProblemSetModel} from "../database/models/problemSet";
+import { Request, Response } from "express";
+import { problemDBInteractions } from "../database/interactions/problem";
+import { IProblemModel, Problem } from "../database/models/problem";
+import { IProblem } from "../interfaces/IProblem";
+import { validationResult } from "express-validator/check";
+import { errorMessage } from "../config/errorFormatter";
+import { statusCodes } from "../config/statusCodes";
+import { calculateProblemHash } from "../util/hash";
+import { problemSetDBInteractions } from "../database/interactions/problemSet";
+import { IProblemSetModel } from "../database/models/problemSet";
 
 const problemController = {
 
