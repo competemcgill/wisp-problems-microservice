@@ -1,5 +1,5 @@
 import { body, param, ValidationChain } from "express-validator/check";
-import { validateProblemSetIds, validateProblemMetadata } from "./problemCustom";
+import { validateProblemSetIds, validateProblemMetadata, validateProblemPlatform } from "./problemCustom";
 
 export function problemValidator(method: string): ValidationChain[] {
     switch (method) {
@@ -14,26 +14,23 @@ export function problemValidator(method: string): ValidationChain[] {
         case "POST /problems": {
             return [
                 body("title", "Invalid or missing 'title'").isString().exists(),
-                body("source", "Invalid or missing 'source'").isString().exists(),
+                body("source", "Invalid or missing 'source'").isString().exists().custom(validateProblemPlatform),
                 body("sourceLink", "Invalid or missing 'sourceLink'").isString().exists(),
                 body("problemSetIds", "Invalid or missing 'problemSetId'").isArray().exists(),
                 body("problemSetIds", "Invalid or nonexistent 'problemSetId'").custom(validateProblemSetIds),
                 body("problemMetadata", "Missing 'problemMetadata'").exists(),
-                body("problemMetadata", "Invalid or missing fields in 'problemMetadata'")
-                    .custom(validateProblemMetadata)
+                body("problemMetadata", "Invalid or missing fields in 'problemMetadata'").custom(validateProblemMetadata)
             ];
         }
         case "PUT /problems/:problemId": {
             return [
                 param("problemId", "Invalid or missing ':problemId'").exists().isMongoId(),
                 body("title", "Invalid or missing 'title'").isString().exists(),
-                body("source", "Invalid or missing 'source'").isString().exists(),
+                body("source", "Invalid or missing 'source'").isString().exists().custom(validateProblemPlatform),
                 body("sourceLink", "Invalid or missing 'sourceLink'").isString().exists(),
                 body("problemSetIds", "Invalid or missing 'problemSetId'").isArray().exists(),
                 body("problemSetIds", "Invalid or nonexistent 'problemSetId'").custom(validateProblemSetIds),
-                body("problemMetadata", "Invalid or missing fields in 'problemMetadata' (optional)")
-                    .optional()
-                    .custom(validateProblemMetadata)
+                body("problemMetadata", "Invalid or missing fields in 'problemMetadata'").custom(validateProblemMetadata)
             ];
         }
         case "DELETE /problems/:problemId": {

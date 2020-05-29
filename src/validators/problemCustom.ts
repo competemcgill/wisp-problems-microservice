@@ -1,5 +1,5 @@
 import { problemSetDBInteractions } from "../database/interactions/problemSet";
-import { Difficulty } from "../interfaces/IProblem";
+import { Difficulty, PlatformName } from "../interfaces/IProblem";
 
 export async function validateProblemSetIds(problemSetIds: Array<string>) {
     const promiseArray = problemSetIds.map(problemSetId => problemSetDBInteractions.find(problemSetId));
@@ -8,7 +8,12 @@ export async function validateProblemSetIds(problemSetIds: Array<string>) {
 }
 
 export function validateProblemMetadata(problemMetadata) {
-    return !(!("platformProblemId" in problemMetadata)
-        || !("difficulty" in problemMetadata)
-        || !(problemMetadata.difficulty in Difficulty));
+    console.log(problemMetadata.difficulty)
+    return ("platformProblemId" in problemMetadata)
+        && ("difficulty" in problemMetadata)
+        && (problemMetadata.difficulty.toLowerCase() in Difficulty);
+}
+
+export function validateProblemPlatform(platform) {
+    return platform.toUpperCase() in PlatformName;
 }

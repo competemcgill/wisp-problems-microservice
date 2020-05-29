@@ -56,8 +56,11 @@ const problemController = {
             res.status(statusCodes.MISSING_PARAMS).json(errors.formatWith(errorMessage).array()[0]);
         } else {
             try {
+                req.body.problemMetadata.difficulty = req.body.problemMetadata.difficulty.toLowerCase()
+                req.body.source = req.body.source.toUpperCase();
+
+                const platform = req.body.source
                 let platformProblemId = req.body.problemMetadata.platformProblemId
-                const platform = req.body.source.toUpperCase()
                 if (platform == "CODEFORCES") {
                     platformProblemId = platformProblemId.toUpperCase();
                 }
@@ -95,20 +98,20 @@ const problemController = {
                 if (!problem)
                     res.status(statusCodes.NOT_FOUND).send({ status: statusCodes.NOT_FOUND, message: "Problem not found" });
                 else {
+                    req.body.problemMetadata.difficulty = req.body.problemMetadata.difficulty.toLowerCase()
+                    req.body.source = req.body.source.toUpperCase();
 
                     let updatedProblemBody: IProblem = {
                         ...req.body,
                     };
 
 
-                    if (req.body.source && req.body.problemMetadata) {
-                        let platformProblemId = req.body.problemMetadata.platformProblemId
-                        const platform = req.body.source.toUpperCase()
-                        if (platform == "CODEFORCES") {
-                            platformProblemId = platformProblemId.toUpperCase();
-                        }
-                        updatedProblemBody.problemId = calculateProblemHash(platform, platformProblemId);
+                    let platformProblemId = req.body.problemMetadata.platformProblemId
+                    const platform = req.body.source;
+                    if (platform == "CODEFORCES") {
+                        platformProblemId = platformProblemId.toUpperCase();
                     }
+                    updatedProblemBody.problemId = calculateProblemHash(platform, platformProblemId);
 
                     for (const problemSetId of problem.problemSetIds) {
                         const problemCount: number = await problemDBInteractions.countInProblemSet(problemSetId);
