@@ -26,7 +26,7 @@ const problemController = {
             res.status(statusCodes.MISSING_PARAMS).json(errors.formatWith(errorMessage).array()[0]);
         } else {
             try {
-                const problemId: string = req.params.problemId;
+                const { problemId } = req.params;
                 const problem: IProblemModel = await problemDBInteractions.find(problemId);
                 problem ? res.status(statusCodes.SUCCESS).send(problem) : res.status(statusCodes.NOT_FOUND).send({ status: statusCodes.NOT_FOUND, message: "Problem not found" });
             } catch (error) {
@@ -107,8 +107,7 @@ const problemController = {
                         if (platform == "CODEFORCES") {
                             platformProblemId = platformProblemId.toUpperCase();
                         }
-                        const problemId: string = calculateProblemHash(platform, platformProblemId)
-                        updatedProblemBody.problemId = problemId;
+                        updatedProblemBody.problemId = calculateProblemHash(platform, platformProblemId);
                     }
 
                     for (const problemSetId of problem.problemSetIds) {
