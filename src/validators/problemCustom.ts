@@ -8,7 +8,6 @@ export async function validateProblemSetIds(problemSetIds: Array<string>) {
 }
 
 export function validateProblemMetadata(problemMetadata) {
-    console.log(problemMetadata.difficulty)
     return ("platformProblemId" in problemMetadata)
         && ("difficulty" in problemMetadata)
         && (problemMetadata.difficulty.toLowerCase() in Difficulty);
