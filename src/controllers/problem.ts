@@ -26,8 +26,8 @@ const problemController = {
             res.status(statusCodes.MISSING_PARAMS).json(errors.formatWith(errorMessage).array()[0]);
         } else {
             try {
-                const problemId: string = req.params.problemId;
-                const problem: IProblemModel = await problemDBInteractions.find(problemId);
+                const mongoId: string = req.params.problemId;
+                const problem: IProblemModel = await problemDBInteractions.find(mongoId);
                 problem ? res.status(statusCodes.SUCCESS).send(problem) : res.status(statusCodes.NOT_FOUND).send({ status: statusCodes.NOT_FOUND, message: "Problem not found" });
             } catch (error) {
                 res.status(statusCodes.SERVER_ERROR).send(error);
@@ -90,8 +90,8 @@ const problemController = {
             res.status(statusCodes.MISSING_PARAMS).json(errors.formatWith(errorMessage).array()[0]);
         } else {
             try {
-                const { problemId } = req.params;
-                const problem: IProblemModel = await problemDBInteractions.find(problemId);
+                const mongoId: string  = req.params.problemId;
+                const problem: IProblemModel = await problemDBInteractions.find(mongoId);
                 if (!problem)
                     res.status(statusCodes.NOT_FOUND).send({ status: statusCodes.NOT_FOUND, message: "Problem not found" });
                 else {
@@ -118,7 +118,7 @@ const problemController = {
                         currProblemSet.save();
                     }
 
-                    const updatedProblem: IProblemModel = await problemDBInteractions.update(problemId, updatedProblemBody);
+                    const updatedProblem: IProblemModel = await problemDBInteractions.update(mongoId, updatedProblemBody);
                     res.status(statusCodes.SUCCESS).send(updatedProblem);
                 }
             } catch (error) {
@@ -133,12 +133,12 @@ const problemController = {
             res.status(statusCodes.MISSING_PARAMS).json(errors.formatWith(errorMessage).array()[0]);
         } else {
             try {
-                const { problemId } = req.params;
-                const problem: IProblemModel = await problemDBInteractions.find(problemId);
+                const mongoId = req.params.problemId;
+                const problem: IProblemModel = await problemDBInteractions.find(mongoId);
                 if (!problem) {
                     res.status(statusCodes.NOT_FOUND).send({ status: statusCodes.NOT_FOUND, message: "Problem not found" });
                 } else {
-                    const deletedProblem: IProblemModel = await problemDBInteractions.delete(problemId);
+                    const deletedProblem: IProblemModel = await problemDBInteractions.delete(mongoId);
                     for (const problemSetId of problem.problemSetIds) {
                         const problemCount: number = await problemDBInteractions.countInProblemSet(problemSetId);
                         let currProblemSet: IProblemSetModel = await problemSetDBInteractions.find(problemSetId);
