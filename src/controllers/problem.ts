@@ -1,13 +1,13 @@
-import { Request, Response } from "express";
-import { problemDBInteractions } from "../database/interactions/problem";
-import { Problem, IProblemModel } from "../database/models/problem";
-import { IProblem } from "../interfaces/IProblem";
-import { validationResult } from "express-validator/check";
-import { errorMessage } from "../config/errorFormatter";
-import { statusCodes } from "../config/statusCodes";
-import { calculateProblemHash } from "../util/hash";
-import { problemSetDBInteractions } from "../database/interactions/problemSet";
-import { IProblemSetModel } from "../database/models/problemSet";
+import {Request, Response} from "express";
+import {problemDBInteractions} from "../database/interactions/problem";
+import {IProblemModel, Problem} from "../database/models/problem";
+import {IProblem} from "../interfaces/IProblem";
+import {validationResult} from "express-validator/check";
+import {errorMessage} from "../config/errorFormatter";
+import {statusCodes} from "../config/statusCodes";
+import {calculateProblemHash} from "../util/hash";
+import {problemSetDBInteractions} from "../database/interactions/problemSet";
+import {IProblemSetModel} from "../database/models/problemSet";
 
 const problemController = {
 
@@ -26,8 +26,8 @@ const problemController = {
             res.status(statusCodes.MISSING_PARAMS).json(errors.formatWith(errorMessage).array()[0]);
         } else {
             try {
-                const mongoId: string = req.params.problemId;
-                const problem: IProblemModel = await problemDBInteractions.find(mongoId);
+                const problemId: string = req.params.problemId;
+                const problem: IProblemModel = await problemDBInteractions.find(problemId);
                 problem ? res.status(statusCodes.SUCCESS).send(problem) : res.status(statusCodes.NOT_FOUND).send({ status: statusCodes.NOT_FOUND, message: "Problem not found" });
             } catch (error) {
                 res.status(statusCodes.SERVER_ERROR).send(error);
@@ -90,8 +90,8 @@ const problemController = {
             res.status(statusCodes.MISSING_PARAMS).json(errors.formatWith(errorMessage).array()[0]);
         } else {
             try {
-                const mongoId: string  = req.params.problemId;
-                const problem: IProblemModel = await problemDBInteractions.find(mongoId);
+                const problemId: string  = req.params.problemId;
+                const problem: IProblemModel = await problemDBInteractions.find(problemId);
                 if (!problem)
                     res.status(statusCodes.NOT_FOUND).send({ status: statusCodes.NOT_FOUND, message: "Problem not found" });
                 else {
@@ -107,8 +107,7 @@ const problemController = {
                         if (platform == "CODEFORCES") {
                             platformProblemId = platformProblemId.toUpperCase();
                         }
-                        const problemId: string = calculateProblemHash(platform, platformProblemId)
-                        updatedProblemBody.problemId = problemId;
+                        updatedProblemBody.problemId = calculateProblemHash(platform, platformProblemId);
                     }
 
                     for (const problemSetId of problem.problemSetIds) {
@@ -118,7 +117,7 @@ const problemController = {
                         currProblemSet.save();
                     }
 
-                    const updatedProblem: IProblemModel = await problemDBInteractions.update(mongoId, updatedProblemBody);
+                    const updatedProblem: IProblemModel = await problemDBInteractions.update(problemId, updatedProblemBody);
                     res.status(statusCodes.SUCCESS).send(updatedProblem);
                 }
             } catch (error) {
@@ -133,12 +132,12 @@ const problemController = {
             res.status(statusCodes.MISSING_PARAMS).json(errors.formatWith(errorMessage).array()[0]);
         } else {
             try {
-                const mongoId = req.params.problemId;
-                const problem: IProblemModel = await problemDBInteractions.find(mongoId);
+                const problemId = req.params.problemId;
+                const problem: IProblemModel = await problemDBInteractions.find(problemId);
                 if (!problem) {
                     res.status(statusCodes.NOT_FOUND).send({ status: statusCodes.NOT_FOUND, message: "Problem not found" });
                 } else {
-                    const deletedProblem: IProblemModel = await problemDBInteractions.delete(mongoId);
+                    const deletedProblem: IProblemModel = await problemDBInteractions.delete(problemId);
                     for (const problemSetId of problem.problemSetIds) {
                         const problemCount: number = await problemDBInteractions.countInProblemSet(problemSetId);
                         let currProblemSet: IProblemSetModel = await problemSetDBInteractions.find(problemSetId);
