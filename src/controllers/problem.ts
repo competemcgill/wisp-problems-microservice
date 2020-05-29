@@ -73,7 +73,7 @@ const problemController = {
                     const problemCount: number = await problemDBInteractions.countInProblemSet(problemSetId);
                     let currProblemSet: IProblemSetModel = await problemSetDBInteractions.find(problemSetId);
                     currProblemSet.problemCount = problemCount;
-                    currProblemSet.save();
+                    await currProblemSet.save();
                 }
 
                 newProblem = newProblem.toJSON();
