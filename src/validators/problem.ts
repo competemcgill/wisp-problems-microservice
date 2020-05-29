@@ -1,5 +1,5 @@
 import { body, param, ValidationChain } from "express-validator/check";
-import {problemSetDBInteractions} from "../database/interactions/problemSet";
+import { validateProblemSetIds, validateProblemMetadata } from "./problemCustom";
 
 export function problemValidator(method: string): ValidationChain[] {
     switch (method) {
@@ -18,7 +18,9 @@ export function problemValidator(method: string): ValidationChain[] {
                 body("sourceLink", "Invalid or missing 'sourceLink'").isString().exists(),
                 body("problemSetIds", "Invalid or missing 'problemSetId'").isArray().exists(),
                 body("problemSetIds", "Invalid or nonexistent 'problemSetId'").custom(validateProblemSetIds),
-                body("problemMetadata", "Invalid or missing 'problemMetadata' (optional)").optional()
+                body("problemMetadata", "Missing 'problemMetadata'").exists(),
+                body("problemMetadata", "Invalid or missing fields in 'problemMetadata'")
+                    .custom(validateProblemMetadata)
             ];
         }
         case "PUT /problems/:problemId": {
@@ -28,7 +30,10 @@ export function problemValidator(method: string): ValidationChain[] {
                 body("source", "Invalid or missing 'source'").isString().exists(),
                 body("sourceLink", "Invalid or missing 'sourceLink'").isString().exists(),
                 body("problemSetIds", "Invalid or missing 'problemSetId'").isArray().exists(),
-                body("problemMetadata", "Invalid or missing 'problemMetadata' (optional)").optional()
+                body("problemSetIds", "Invalid or nonexistent 'problemSetId'").custom(validateProblemSetIds),
+                body("problemMetadata", "Invalid or missing fields in 'problemMetadata' (optional)")
+                    .optional()
+                    .custom(validateProblemMetadata)
             ];
         }
         case "DELETE /problems/:problemId": {
@@ -42,10 +47,4 @@ export function problemValidator(method: string): ValidationChain[] {
             ];
         }
     }
-}
-
-async function validateProblemSetIds(problemSetIds: Array<string>) {
-    const promiseArray = problemSetIds.map(problemSetId => problemSetDBInteractions.find(problemSetId));
-    const problemSetArray = await Promise.all(promiseArray);
-    return !problemSetArray.some(problemSet => problemSet === null);
 }

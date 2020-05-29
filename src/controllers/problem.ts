@@ -61,7 +61,7 @@ const problemController = {
                 if (platform == "CODEFORCES") {
                     platformProblemId = platformProblemId.toUpperCase();
                 }
-                // TODO: add verification that the fields within the Object problemMetadata are present
+
                 const problemData: IProblem = {
                     ...req.body,
                     problemId: calculateProblemHash(platform, platformProblemId)
@@ -101,7 +101,7 @@ const problemController = {
                     };
 
 
-                    if (req.body.source && req.body.problemMetadata && req.body.problemMetadata.platformProblemId) {
+                    if (req.body.source && req.body.problemMetadata) {
                         let platformProblemId = req.body.problemMetadata.platformProblemId
                         const platform = req.body.source.toUpperCase()
                         if (platform == "CODEFORCES") {
