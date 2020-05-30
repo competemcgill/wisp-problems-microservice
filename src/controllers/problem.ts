@@ -56,7 +56,7 @@ const problemController = {
             res.status(statusCodes.MISSING_PARAMS).json(errors.formatWith(errorMessage).array()[0]);
         } else {
             try {
-                const { problem } = req.body;
+                const problem = req.body;
                 problem.problemMetadata.difficulty = problem.problemMetadata.difficulty.toLowerCase()
                 problem.source = problem.source.toUpperCase();
 
@@ -99,17 +99,15 @@ const problemController = {
                 if (!problem)
                     res.status(statusCodes.NOT_FOUND).send({ status: statusCodes.NOT_FOUND, message: "Problem not found" });
                 else {
-                    const { problem } = req.body;
-                    problem.problemMetadata.difficulty = problem.problemMetadata.difficulty.toLowerCase()
-                    problem.source = problem.source.toUpperCase();
-
                     let updatedProblemBody: IProblem = {
-                        ...problem,
+                        ...req.body,
+                        source: req.body.source.toUpperCase()
                     };
+                    updatedProblemBody.problemMetadata.difficulty = updatedProblemBody.problemMetadata.difficulty.toLowerCase();
 
 
-                    let platformProblemId = problem.problemMetadata.platformProblemId
-                    const platform = problem.source;
+                    let platformProblemId = updatedProblemBody.problemMetadata.platformProblemId
+                    const platform = updatedProblemBody.source;
                     if (platform == "CODEFORCES") {
                         platformProblemId = platformProblemId.toUpperCase();
                     }
