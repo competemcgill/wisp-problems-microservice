@@ -56,18 +56,18 @@ const problemController = {
             res.status(statusCodes.MISSING_PARAMS).json(errors.formatWith(errorMessage).array()[0]);
         } else {
             try {
-                const { problemMetadata } = req.body.problemMetadata;
-                problemMetadata.difficulty = problemMetadata.difficulty.toLowerCase()
-                req.body.source = req.body.source.toUpperCase();
+                const { problem } = req.body;
+                problem.problemMetadata.difficulty = problem.problemMetadata.difficulty.toLowerCase()
+                problem.source = problem.source.toUpperCase();
 
-                const platform = req.body.source
-                let platformProblemId = problemMetadata.platformProblemId
+                const platform = problem.source
+                let platformProblemId = problem.problemMetadata.platformProblemId
                 if (platform == "CODEFORCES") {
                     platformProblemId = platformProblemId.toUpperCase();
                 }
 
                 const problemData: IProblem = {
-                    ...req.body,
+                    ...problem,
                     problemId: calculateProblemHash(platform, platformProblemId)
                 };
                 let newProblem: IProblemModel = await problemDBInteractions.create(new Problem(problemData));
@@ -99,17 +99,17 @@ const problemController = {
                 if (!problem)
                     res.status(statusCodes.NOT_FOUND).send({ status: statusCodes.NOT_FOUND, message: "Problem not found" });
                 else {
-                    const { problemMetadata } = req.body.problemMetadata;
-                    problemMetadata.difficulty = problemMetadata.difficulty.toLowerCase()
-                    req.body.source = req.body.source.toUpperCase();
+                    const { problem } = req.body;
+                    problem.problemMetadata.difficulty = problem.problemMetadata.difficulty.toLowerCase()
+                    problem.source = problem.source.toUpperCase();
 
                     let updatedProblemBody: IProblem = {
-                        ...req.body,
+                        ...problem,
                     };
 
 
-                    let platformProblemId = problemMetadata.platformProblemId
-                    const platform = req.body.source;
+                    let platformProblemId = problem.problemMetadata.platformProblemId
+                    const platform = problem.source;
                     if (platform == "CODEFORCES") {
                         platformProblemId = platformProblemId.toUpperCase();
                     }

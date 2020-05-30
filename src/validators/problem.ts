@@ -19,7 +19,7 @@ export function problemValidator(method: string): ValidationChain[] {
                 body("problemSetIds", "Invalid or missing 'problemSetId'").isArray().exists(),
                 body("problemSetIds", "Invalid or nonexistent 'problemSetId'").custom(validateProblemSetIds),
                 body("problemMetadata", "Missing 'problemMetadata'").exists(),
-                body("problemMetadata", "Invalid or missing fields in 'problemMetadata'").custom(validateProblemMetadata)
+                body("problemMetadata", "Invalid or missing fields in 'problemMetadata'").exists().custom(validateProblemMetadata)
             ];
         }
         case "PUT /problems/:problemId": {
@@ -30,7 +30,7 @@ export function problemValidator(method: string): ValidationChain[] {
                 body("sourceLink", "Invalid or missing 'sourceLink'").isString().exists(),
                 body("problemSetIds", "Invalid or missing 'problemSetId'").isArray().exists(),
                 body("problemSetIds", "Invalid or nonexistent 'problemSetId'").custom(validateProblemSetIds),
-                body("problemMetadata", "Invalid or missing fields in 'problemMetadata'").custom(validateProblemMetadata)
+                body("problemMetadata", "Invalid or missing fields in 'problemMetadata'").exists().custom(validateProblemMetadata)
             ];
         }
         case "DELETE /problems/:problemId": {
