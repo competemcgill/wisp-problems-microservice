@@ -2,9 +2,9 @@ import sinon from "sinon";
 import { IProblem, Difficulty, PlatformName } from "../../../src/interfaces/IProblem";
 import { IProblemSet } from "../../../src/interfaces/IProblemSet";
 import { problemController } from "../../../src/controllers/problem";
-import { problemDBInteractionsStubs } from "../stubs/problem"
-import { problemSetDBInteractionsStubs } from "../stubs/problemSet"
-import { mockReq, mockRes } from 'sinon-express-mock'
+import { problemDBInteractionsStubs } from "../stubs/problem";
+import { problemSetDBInteractionsStubs } from "../stubs/problemSet";
+import { mockReq, mockRes } from 'sinon-express-mock';
 import chai, { expect } from "chai";
 
 let problemDBStubs;
@@ -64,6 +64,5 @@ describe("Problems controller tests", () => {
             sinon.assert.calledOnce(problemDBStubs.all);
             sinon.assert.calledWith(mockRes.status, 500);
         });
-
     });
 });

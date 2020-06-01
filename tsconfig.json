@@ -5,7 +5,7 @@
         "esModuleInterop": true,
         "module": "commonjs",
         "baseUrl": "./src",
-        "rootDir": "src",
+        "rootDirs": ["src", "tests"],
         "outDir": "dist",
         "resolveJsonModule": true,
         "target": "es6",
