@@ -1,5 +1,5 @@
-import { problemDBInteractions } from "../../../src/database/interactions/problem";
 import sinon from "sinon";
+import { problemDBInteractions } from "../../../src/database/interactions/problem";
 
 export const problemDBInteractionsStubs = () => {
     return {
