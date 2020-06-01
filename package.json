@@ -57,6 +57,7 @@
     "nodemon": "^1.19.0",
     "nyc": "^14.1.1",
     "sinon": "^9.0.2",
+    "sinon-express-mock": "^2.2.1",
     "source-map-support": "^0.5.12",
     "swagger-jsdoc": "^3.2.9",
     "swagger-ui-express": "^4.0.2",

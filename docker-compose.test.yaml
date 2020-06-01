@@ -10,12 +10,12 @@ services:
       - .:/app
     working_dir: /app
     command: sh -c "npm i && npm run test:local"
-    links:
-      - mongo
-  mongo:
-    container_name: mongo
-    image: mongo
-    logging:
-      driver: none
-    ports:
-      - 27017:27017
+#    links:
+#      - mongo
+#  mongo:
+#    container_name: mongo
+#    image: mongo
+#    logging:
+#      driver: none
+#    ports:
+#      - 27017:27017

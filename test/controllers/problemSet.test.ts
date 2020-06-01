@@ -1,8 +1,14 @@
-// TODO: mock DB interactions
+import sinon from "sinon";
 import chai, { expect } from "chai";
 import { IProblem, Difficulty, PlatformName } from "../../src/interfaces/IProblem";
 import { IProblemSet } from "../../src/interfaces/IProblemSet";
-import { problemSetController } from "../../src/controllers/problemSet";
+import { problemSetDBInteractionsStubs } from "../stubs/problemSet"
+import {problemSetController} from "../../src/controllers/problemSet";
+import { mockReq, mockRes } from 'sinon-express-mock'
+import {problemDBInteractionsStubs} from "../stubs/problem";
+
+let problemDBStubs;
+let problemSetDBStubs;
 
 const testProblemSet: IProblemSet = {
     title: "Test Problem Set",
@@ -22,10 +28,30 @@ const testProblem: IProblem = {
     }
 };
 
-describe("Problems controller tests", () => {
-    describe("PROBLEMS: list", () => {
-        it("status 200: returns a list of problems", async () => {
-            expect(true).to.be.true;
+describe("Problem sets controller tests", () => {
+
+    before(() => {
+        problemDBStubs = problemDBInteractionsStubs();
+        problemSetDBStubs = problemSetDBInteractionsStubs();
+    });
+
+    beforeEach( () => {
+        mockRes.status = sinon.stub().returns(mockRes);
+        mockRes.send = sinon.stub().returns(mockRes);
+    });
+
+    afterEach( () => {
+        sinon.reset();
+    });
+
+    after( () => {
+        problemDBStubs.restoreStubs();
+        problemSetDBStubs.restoreStubs();
+    });
+
+    describe("PROBLEM SETS: list", () => {
+        it("status 200: returns successfully a list of a single test problem set", async () => {
+
         });
     });
 });
