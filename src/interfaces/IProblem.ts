@@ -15,5 +15,5 @@ export interface IProblem {
     problemMetadata: {
         platformProblemId: string;
         difficulty: string;
-    };
+    }
 }
