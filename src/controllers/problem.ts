@@ -77,7 +77,7 @@ const problemController = {
                     const problemCount: number = await problemDBInteractions.countInProblemSet(problemSetId);
                     let currProblemSet: IProblemSetModel = await problemSetDBInteractions.find(problemSetId);
                     currProblemSet.problemCount = problemCount;
-                    currProblemSet.save();
+                    await currProblemSet.save();
                 }
 
                 newProblem = newProblem.toJSON();
@@ -117,7 +117,7 @@ const problemController = {
                         const problemCount: number = await problemDBInteractions.countInProblemSet(problemSetId);
                         let currProblemSet: IProblemSetModel = await problemSetDBInteractions.find(problemSetId);
                         currProblemSet.problemCount = problemCount;
-                        currProblemSet.save();
+                        await currProblemSet.save();
                     }
 
                     const updatedProblem: IProblemModel = await problemDBInteractions.update(problemId, updatedProblemBody);
@@ -145,7 +145,7 @@ const problemController = {
                         const problemCount: number = await problemDBInteractions.countInProblemSet(problemSetId);
                         let currProblemSet: IProblemSetModel = await problemSetDBInteractions.find(problemSetId);
                         currProblemSet.problemCount = problemCount;
-                        currProblemSet.save();
+                        await currProblemSet.save();
                     }
                     res.status(statusCodes.SUCCESS).send();
                 }
