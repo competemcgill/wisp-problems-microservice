@@ -56,14 +56,18 @@ const problemController = {
             res.status(statusCodes.MISSING_PARAMS).json(errors.formatWith(errorMessage).array()[0]);
         } else {
             try {
-                let platformProblemId = req.body.problemMetadata.platformProblemId
-                const platform = req.body.source.toUpperCase()
+                const problem = req.body;
+                problem.problemMetadata.difficulty = problem.problemMetadata.difficulty.toLowerCase()
+                problem.source = problem.source.toUpperCase();
+
+                const platform = problem.source
+                let platformProblemId = problem.problemMetadata.platformProblemId
                 if (platform == "CODEFORCES") {
                     platformProblemId = platformProblemId.toUpperCase();
                 }
-                // TODO: add verification that the fields within the Object problemMetadata are present
+
                 const problemData: IProblem = {
-                    ...req.body,
+                    ...problem,
                     problemId: calculateProblemHash(platform, platformProblemId)
                 };
                 let newProblem: IProblemModel = await problemDBInteractions.create(new Problem(problemData));
@@ -95,20 +99,19 @@ const problemController = {
                 if (!problem)
                     res.status(statusCodes.NOT_FOUND).send({ status: statusCodes.NOT_FOUND, message: "Problem not found" });
                 else {
-
                     let updatedProblemBody: IProblem = {
                         ...req.body,
+                        source: req.body.source.toUpperCase()
                     };
+                    updatedProblemBody.problemMetadata.difficulty = updatedProblemBody.problemMetadata.difficulty.toLowerCase();
 
 
-                    if (req.body.source && req.body.problemMetadata && req.body.problemMetadata.platformProblemId) {
-                        let platformProblemId = req.body.problemMetadata.platformProblemId
-                        const platform = req.body.source.toUpperCase()
-                        if (platform == "CODEFORCES") {
-                            platformProblemId = platformProblemId.toUpperCase();
-                        }
-                        updatedProblemBody.problemId = calculateProblemHash(platform, platformProblemId);
+                    let platformProblemId = updatedProblemBody.problemMetadata.platformProblemId
+                    const platform = updatedProblemBody.source;
+                    if (platform == "CODEFORCES") {
+                        platformProblemId = platformProblemId.toUpperCase();
                     }
+                    updatedProblemBody.problemId = calculateProblemHash(platform, platformProblemId);
 
                     for (const problemSetId of problem.problemSetIds) {
                         const problemCount: number = await problemDBInteractions.countInProblemSet(problemSetId);
