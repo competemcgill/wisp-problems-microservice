@@ -1,9 +1,9 @@
 import sinon from "sinon";
 import chai, { expect } from "chai";
-import { IProblem, Difficulty, PlatformName } from "../../src/interfaces/IProblem";
-import { IProblemSet } from "../../src/interfaces/IProblemSet";
+import { IProblem, Difficulty, PlatformName } from "../../../src/interfaces/IProblem";
+import { IProblemSet } from "../../../src/interfaces/IProblemSet";
 import { problemSetDBInteractionsStubs } from "../stubs/problemSet"
-import {problemSetController} from "../../src/controllers/problemSet";
+import {problemSetController} from "../../../src/controllers/problemSet";
 import { mockReq, mockRes } from 'sinon-express-mock'
 import {problemDBInteractionsStubs} from "../stubs/problem";
 
@@ -50,8 +50,8 @@ describe("Problem sets controller tests", () => {
     });
 
     describe("PROBLEM SETS: list", () => {
-        it("status 200: returns successfully a list of a single test problem set", async () => {
-            // TODO: Write test here
+        it("status 200: returns successfully a list of a single tests problem set", async () => {
+            // TODO: Write tests here
         });
     });
 });

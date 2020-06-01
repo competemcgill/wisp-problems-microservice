@@ -1,7 +1,7 @@
 import sinon from "sinon";
-import { IProblem, Difficulty, PlatformName } from "../../src/interfaces/IProblem";
-import { IProblemSet } from "../../src/interfaces/IProblemSet";
-import { problemController } from "../../src/controllers/problem";
+import { IProblem, Difficulty, PlatformName } from "../../../src/interfaces/IProblem";
+import { IProblemSet } from "../../../src/interfaces/IProblemSet";
+import { problemController } from "../../../src/controllers/problem";
 import { problemDBInteractionsStubs } from "../stubs/problem"
 import { problemSetDBInteractionsStubs } from "../stubs/problemSet"
 import { mockReq, mockRes } from 'sinon-express-mock'
@@ -50,7 +50,7 @@ describe("Problems controller tests", () => {
 
     describe("PROBLEMS: list", () => {
 
-        it("status 200: returns successfully a list of a single test problem", async () => {
+        it("status 200: returns successfully a list of a single tests problem", async () => {
             problemDBStubs.all.returns([testProblem]);
             await problemController.index(mockReq, mockRes);
             sinon.assert.calledOnce(problemDBStubs.all);

@@ -1,4 +1,4 @@
-import {problemSetDBInteractions} from "../../src/database/interactions/problemSet";
+import {problemSetDBInteractions} from "../../../src/database/interactions/problemSet";
 import sinon from "sinon";
 
 export const problemSetDBInteractionsStubs = () => {

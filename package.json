@@ -5,7 +5,7 @@
   "main": "dist/server.js",
   "scripts": {
     "test": "docker-compose -f docker-compose.test.yaml up --abort-on-container-exit",
-    "test:local": "nyc mocha -r ts-node/register \"./test/**/*.test.ts\"",
+    "test:local": "nyc mocha -r ts-node/register \"./tests/**/*.test.ts\"",
     "start": "NODE_ENV=dev docker-compose up",
     "start:local": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/server.ts",
     "start:prod": "NODE_ENV=production node dist/server.js",
