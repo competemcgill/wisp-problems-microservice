@@ -43,7 +43,7 @@ const problemSetController = {
                 const problemSet: IProblemSetModel = await problemSetDBInteractions.find(problemSetId);
 
                 // TODO: find a non-hacky way to include IProblem[] array optionally into response with interface
-                let result: any = problemSet["_doc"];
+                const result: any = problemSet["_doc"];
                 if (req.query.includeProblems == "true") {
                     const problems: IProblem[] = await problemDBInteractions.listByProblemSet(problemSet._id);
                     result.problems = problems;

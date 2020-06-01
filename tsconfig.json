@@ -5,7 +5,7 @@
         "esModuleInterop": true,
         "module": "commonjs",
         "baseUrl": "./src",
-        "rootDir": "src",
+        "rootDirs": ["src", "tests"],
         "outDir": "dist",
         "resolveJsonModule": true,
         "target": "es6",
@@ -16,9 +16,10 @@
         ]
     },
     "include": [
-        "src/**/*.ts"
+        "src/**/*.ts",
+        "tests/**/*.ts"
     ],
     "exclude": [
-        "node_modules",
+        "node_modules"
     ]
 }

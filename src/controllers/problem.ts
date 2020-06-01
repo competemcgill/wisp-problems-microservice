@@ -70,12 +70,13 @@ const problemController = {
                     ...problem,
                     problemId: calculateProblemHash(platform, platformProblemId)
                 };
+
                 let newProblem: IProblemModel = await problemDBInteractions.create(new Problem(problemData));
 
 
                 for (const problemSetId of newProblem.problemSetIds) {
                     const problemCount: number = await problemDBInteractions.countInProblemSet(problemSetId);
-                    let currProblemSet: IProblemSetModel = await problemSetDBInteractions.find(problemSetId);
+                    const currProblemSet: IProblemSetModel = await problemSetDBInteractions.find(problemSetId);
                     currProblemSet.problemCount = problemCount;
                     await currProblemSet.save();
                 }
@@ -105,7 +106,6 @@ const problemController = {
                     };
                     updatedProblemBody.problemMetadata.difficulty = updatedProblemBody.problemMetadata.difficulty.toLowerCase();
 
-
                     let platformProblemId = updatedProblemBody.problemMetadata.platformProblemId
                     const platform = updatedProblemBody.source;
                     if (platform == "CODEFORCES") {
@@ -115,7 +115,7 @@ const problemController = {
 
                     for (const problemSetId of problem.problemSetIds) {
                         const problemCount: number = await problemDBInteractions.countInProblemSet(problemSetId);
-                        let currProblemSet: IProblemSetModel = await problemSetDBInteractions.find(problemSetId);
+                        const currProblemSet: IProblemSetModel = await problemSetDBInteractions.find(problemSetId);
                         currProblemSet.problemCount = problemCount;
                         await currProblemSet.save();
                     }
@@ -143,7 +143,7 @@ const problemController = {
                     const deletedProblem: IProblemModel = await problemDBInteractions.delete(problemId);
                     for (const problemSetId of problem.problemSetIds) {
                         const problemCount: number = await problemDBInteractions.countInProblemSet(problemSetId);
-                        let currProblemSet: IProblemSetModel = await problemSetDBInteractions.find(problemSetId);
+                        const currProblemSet: IProblemSetModel = await problemSetDBInteractions.find(problemSetId);
                         currProblemSet.problemCount = problemCount;
                         await currProblemSet.save();
                     }
