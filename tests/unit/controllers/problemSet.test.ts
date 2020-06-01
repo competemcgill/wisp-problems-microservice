@@ -2,9 +2,9 @@ import sinon from "sinon";
 import chai, { expect } from "chai";
 import { IProblem, Difficulty, PlatformName } from "../../../src/interfaces/IProblem";
 import { IProblemSet } from "../../../src/interfaces/IProblemSet";
-import { problemSetDBInteractionsStubs } from "../stubs/problemSet"
+import { problemSetDBInteractionsStubs } from "../stubs/problemSet";
 import { problemSetController } from "../../../src/controllers/problemSet";
-import { mockReq, mockRes } from 'sinon-express-mock'
+import { mockReq, mockRes } from 'sinon-express-mock';
 import { problemDBInteractionsStubs } from "../stubs/problem";
 
 let problemDBStubs;
