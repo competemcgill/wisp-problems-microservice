@@ -5,7 +5,6 @@ import { problemController } from "../../../src/controllers/problem";
 import { problemDBInteractionsStubs } from "../stubs/problem";
 import { problemSetDBInteractionsStubs } from "../stubs/problemSet";
 import { mockReq, mockRes } from 'sinon-express-mock';
-
 import chai, { expect } from "chai";
 
 let problemDBStubs;
