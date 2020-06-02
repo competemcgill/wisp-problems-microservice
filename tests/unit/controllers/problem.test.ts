@@ -54,7 +54,7 @@ describe("Problems controller tests", () => {
             problemDBStubs.all.returns([testProblem]);
             await problemController.index(mockReq, mockRes);
             sinon.assert.calledOnce(problemDBStubs.all);
-            sinon.assert.calledWith(mockRes.status, 300);
+            sinon.assert.calledWith(mockRes.status, 200);
             sinon.assert.calledWith(mockRes.send, [testProblem]);
         });
 
