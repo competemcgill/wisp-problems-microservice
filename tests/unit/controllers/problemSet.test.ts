@@ -50,7 +50,8 @@ describe("Problem sets controller tests", () => {
         stubs.problemSetDBStubs.restore();
     });
 
-    describe("PROBLEM SETS: list", () => {
+    describe("Index", () => {
+
         it("status 200: returns successfully a list of a single tests problem set", async () => {
             // TODO: Write tests here
         });
