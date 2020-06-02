@@ -1,15 +1,21 @@
 import sinon from "sinon";
-import chai, { expect } from "chai";
 import { IProblem, Difficulty, PlatformName } from "../../../src/interfaces/IProblem";
-import { IProblemSet } from "../../../src/interfaces/IProblemSet";
 import { problemSetDBInteractionsStubs } from "../stubs/problemSet";
 import { problemSetController } from "../../../src/controllers/problemSet";
 import { mockReq, mockRes } from "sinon-express-mock";
 import { problemDBInteractionsStubs } from "../stubs/problem";
+import { statusCodes } from "../../../src/config/statusCodes";
+import { IProblemSetModel } from "database/models/problemSet";
 
-let stubs;
+// let stubs;
+let stubs = {
+    problemDB: problemDBInteractionsStubs(),
+    problemSetDB: problemSetDBInteractionsStubs()
+};
+stubs.problemDB.restore()
+stubs.problemSetDB.restore()
 
-const testProblemSet: IProblemSet = {
+const testProblemSet = <IProblemSetModel>{
     title: "Test Problem Set",
     description: "Test problem set description.",
     tags: ["Dynamic programming", "Test"],
@@ -31,14 +37,14 @@ describe("Problem sets controller tests", () => {
 
     before(() => {
         stubs = {
-            problemDBStubs: problemDBInteractionsStubs(),
-            problemSetDBStubs: problemSetDBInteractionsStubs()
+            problemDB: problemDBInteractionsStubs(),
+            problemSetDB: problemSetDBInteractionsStubs()
         }
     });
 
     beforeEach(() => {
         mockRes.status = sinon.stub().returns(mockRes);
-        mockRes.send = sinon.stub().returns(mockRes);
+        mockRes.json = sinon.stub().returns(mockRes);
     });
 
     afterEach(() => {
@@ -46,14 +52,40 @@ describe("Problem sets controller tests", () => {
     });
 
     after(() => {
-        stubs.problemDBStubs.restore();
-        stubs.problemSetDBStubs.restore();
+        stubs.problemDB.restore();
+        stubs.problemSetDB.restore();
     });
 
     describe("Index", () => {
+        let req;
+        beforeEach(() => {
+            req = mockReq({
+                query: {
+                }
+            })
+        })
 
-        it("status 200: returns successfully a list of a single tests problem set", async () => {
-            // TODO: Write tests here
+        it("status 200: returns successfully a list of a single problem set", async () => {
+            stubs.problemSetDB.all.resolves([testProblemSet]);
+            await problemSetController.index(req, mockRes);
+            sinon.assert.calledOnce(stubs.problemSetDB.all);
+            sinon.assert.calledWith(mockRes.status, statusCodes.SUCCESS);
+            sinon.assert.calledWith(mockRes.json, [testProblemSet]);
         });
+
+        it("status 200: returns successfully a list of a multiple problem sets", async () => {
+            stubs.problemSetDB.all.resolves([testProblemSet, testProblemSet]);
+            await problemSetController.index(req, mockRes);
+            sinon.assert.calledOnce(stubs.problemSetDB.all);
+            sinon.assert.calledWith(mockRes.status, statusCodes.SUCCESS);
+            sinon.assert.calledWith(mockRes.json, [testProblemSet, testProblemSet]);
+        });
+
+        it("status 500: returns server error if server fails", async () => {
+            stubs.problemSetDB.all.throws();
+            await problemSetController.index(req, mockRes);
+            sinon.assert.calledOnce(stubs.problemSetDB.all);
+            sinon.assert.calledWith(mockRes.status, statusCodes.SERVER_ERROR);
+        })
     });
 });
