@@ -7,8 +7,7 @@ import { problemSetDBInteractionsStubs } from "../stubs/problemSet";
 import { mockReq, mockRes } from "sinon-express-mock";
 import chai, { expect } from "chai";
 
-let problemDBStubs;
-let problemSetDBStubs;
+let stubs;
 
 const testProblemSet: IProblemSet = {
     title: "Test Problem Set",
@@ -29,12 +28,14 @@ const testProblem: IProblem = {
 };
 
 describe("Problems controller tests", () => {
-    before( () => {
-        problemDBStubs = problemDBInteractionsStubs();
-        problemSetDBStubs = problemSetDBInteractionsStubs();
+    before(() => {
+        stubs = {
+            problemDBStubs: problemDBInteractionsStubs(),
+            problemSetDBStubs: problemSetDBInteractionsStubs()
+        }
     });
 
-    beforeEach( () => {
+    beforeEach(() => {
         mockRes.status = sinon.stub().returns(mockRes);
         mockRes.send = sinon.stub().returns(mockRes);
     });
@@ -44,24 +45,24 @@ describe("Problems controller tests", () => {
     });
 
     after(() => {
-        problemDBStubs.restoreStubs();
-        problemSetDBStubs.restoreStubs();
+        stubs.problemDBStubs.restore();
+        stubs.problemSetDBStubs.restore();
     });
 
     describe("PROBLEMS: list", () => {
 
         it("status 200: returns successfully a list of a single tests problem", async () => {
-            problemDBStubs.all.returns([testProblem]);
+            stubs.problemDBStubs.all.returns([testProblem]);
             await problemController.index(mockReq, mockRes);
-            sinon.assert.calledOnce(problemDBStubs.all);
+            sinon.assert.calledOnce(stubs.problemDBStubs.all);
             sinon.assert.calledWith(mockRes.status, 200);
             sinon.assert.calledWith(mockRes.send, [testProblem]);
         });
 
         it("status 500: returns server error code if server fails", async () => {
-            problemDBStubs.all.throws();
+            stubs.problemDBStubs.all.throws();
             await problemController.index(mockReq, mockRes);
-            sinon.assert.calledOnce(problemDBStubs.all);
+            sinon.assert.calledOnce(stubs.problemDBStubs.all);
             sinon.assert.calledWith(mockRes.status, 500);
         });
     });

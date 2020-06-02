@@ -3,13 +3,13 @@ import { problemSetDBInteractions } from "../../../src/database/interactions/pro
 
 export const problemSetDBInteractionsStubs = () => {
     return {
-        create : sinon.stub(problemSetDBInteractions, "create"),
-        all : sinon.stub(problemSetDBInteractions, "all"),
-        find : sinon.stub(problemSetDBInteractions, "find"),
-        update : sinon.stub(problemSetDBInteractions, "update"),
-        delete : sinon.stub(problemSetDBInteractions, "delete"),
+        create: sinon.stub(problemSetDBInteractions, "create"),
+        all: sinon.stub(problemSetDBInteractions, "all"),
+        find: sinon.stub(problemSetDBInteractions, "find"),
+        update: sinon.stub(problemSetDBInteractions, "update"),
+        delete: sinon.stub(problemSetDBInteractions, "delete"),
 
-        restoreStubs() {
+        restore() {
             this.create.restore();
             this.all.restore();
             this.find.restore();

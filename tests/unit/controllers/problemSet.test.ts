@@ -7,8 +7,7 @@ import { problemSetController } from "../../../src/controllers/problemSet";
 import { mockReq, mockRes } from "sinon-express-mock";
 import { problemDBInteractionsStubs } from "../stubs/problem";
 
-let problemDBStubs;
-let problemSetDBStubs;
+let stubs;
 
 const testProblemSet: IProblemSet = {
     title: "Test Problem Set",
@@ -31,22 +30,24 @@ const testProblem: IProblem = {
 describe("Problem sets controller tests", () => {
 
     before(() => {
-        problemDBStubs = problemDBInteractionsStubs();
-        problemSetDBStubs = problemSetDBInteractionsStubs();
+        stubs = {
+            problemDBStubs: problemDBInteractionsStubs(),
+            problemSetDBStubs: problemSetDBInteractionsStubs()
+        }
     });
 
-    beforeEach( () => {
+    beforeEach(() => {
         mockRes.status = sinon.stub().returns(mockRes);
         mockRes.send = sinon.stub().returns(mockRes);
     });
 
-    afterEach( () => {
+    afterEach(() => {
         sinon.reset();
     });
 
-    after( () => {
-        problemDBStubs.restoreStubs();
-        problemSetDBStubs.restoreStubs();
+    after(() => {
+        stubs.problemDBStubs.restore();
+        stubs.problemSetDBStubs.restore();
     });
 
     describe("PROBLEM SETS: list", () => {
