@@ -27,9 +27,9 @@ const problemSetController = {
                 }
             }
 
-            res.status(statusCodes.SUCCESS).send(result);
+            res.status(statusCodes.SUCCESS).json(result);
         } catch (err) {
-            res.status(statusCodes.SERVER_ERROR).send(err);
+            res.status(statusCodes.SERVER_ERROR).json(err);
         }
     },
 
@@ -49,9 +49,9 @@ const problemSetController = {
                     result.problems = problems;
                 }
 
-                problemSet ? res.status(statusCodes.SUCCESS).send(result) : res.status(statusCodes.NOT_FOUND).send({ status: statusCodes.NOT_FOUND, message: "ProblemSet not found" });
+                problemSet ? res.status(statusCodes.SUCCESS).json(result) : res.status(statusCodes.NOT_FOUND).json({ status: statusCodes.NOT_FOUND, message: "ProblemSet not found" });
             } catch (error) {
-                res.status(statusCodes.SERVER_ERROR).send(error);
+                res.status(statusCodes.SERVER_ERROR).json(error);
             }
         }
     },
@@ -67,9 +67,9 @@ const problemSetController = {
                 };
                 let newProblemSet: IProblemSetModel = await problemSetDBInteractions.create(new ProblemSet(problemSetData));
                 newProblemSet = newProblemSet.toJSON();
-                res.status(statusCodes.SUCCESS).send(newProblemSet);
+                res.status(statusCodes.SUCCESS).json(newProblemSet);
             } catch (error) {
-                res.status(statusCodes.SERVER_ERROR).send(error);
+                res.status(statusCodes.SERVER_ERROR).json(error);
             }
         }
     },
@@ -83,17 +83,17 @@ const problemSetController = {
                 const { problemSetId } = req.params;
                 const problemSet: IProblemSetModel = await problemSetDBInteractions.find(problemSetId);
                 if (!problemSet)
-                    res.status(statusCodes.NOT_FOUND).send({ status: statusCodes.NOT_FOUND, message: "ProblemSet not found" });
+                    res.status(statusCodes.NOT_FOUND).json({ status: statusCodes.NOT_FOUND, message: "ProblemSet not found" });
                 else {
                     const updatedProblemSetBody: IProblemSet = {
                         ...req.body,
                     };
 
                     const updatedProblemSet: IProblemSetModel = await problemSetDBInteractions.update(problemSetId, updatedProblemSetBody);
-                    res.status(statusCodes.SUCCESS).send(updatedProblemSet);
+                    res.status(statusCodes.SUCCESS).json(updatedProblemSet);
                 }
             } catch (error) {
-                res.status(statusCodes.SERVER_ERROR).send(error);
+                res.status(statusCodes.SERVER_ERROR).json(error);
             }
         }
     },
@@ -107,13 +107,13 @@ const problemSetController = {
                 const { problemSetId } = req.params;
                 const problemSet: IProblemSetModel = await problemSetDBInteractions.find(problemSetId);
                 if (!problemSet) {
-                    res.status(statusCodes.NOT_FOUND).send({ status: statusCodes.NOT_FOUND, message: "ProblemSet not found" });
+                    res.status(statusCodes.NOT_FOUND).json({ status: statusCodes.NOT_FOUND, message: "ProblemSet not found" });
                 } else {
                     await problemSetDBInteractions.delete(problemSetId);
-                    res.status(statusCodes.SUCCESS).send();
+                    res.status(statusCodes.SUCCESS).json();
                 }
             } catch (error) {
-                res.status(statusCodes.SERVER_ERROR).send(error);
+                res.status(statusCodes.SERVER_ERROR).json(error);
             }
         }
     }
