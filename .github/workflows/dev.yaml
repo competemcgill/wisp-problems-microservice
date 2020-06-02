@@ -3,7 +3,7 @@ name: Build, Tag, Publish and Deploy to GKE
 on:
   push:
     branches:
-      - improvements/ci-add-testing-step
+      - dev
 
 # Environment variables available to all jobs and steps in this workflow
 env:
@@ -27,6 +27,8 @@ jobs:
     # Checkout Commit
     - name: Checkout
       uses: actions/checkout@v2
+
+    # Run tests
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
