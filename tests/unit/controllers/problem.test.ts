@@ -36,7 +36,7 @@ describe("Problems controller tests", () => {
 
     beforeEach( () => {
         mockRes.status = sinon.stub().returns(mockRes);
-        mockRes.send = sinon.stub().returns(mockRes);
+        mockRes.json = sinon.stub().returns(mockRes);
     });
 
     afterEach(() => {
@@ -55,7 +55,7 @@ describe("Problems controller tests", () => {
             await problemController.index(mockReq, mockRes);
             sinon.assert.calledOnce(problemDBStubs.all);
             sinon.assert.calledWith(mockRes.status, 200);
-            sinon.assert.calledWith(mockRes.send, [testProblem]);
+            sinon.assert.calledWith(mockRes.json, [testProblem]);
         });
 
         it("status 500: returns server error code if server fails", async () => {

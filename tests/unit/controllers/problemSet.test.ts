@@ -37,7 +37,7 @@ describe("Problem sets controller tests", () => {
 
     beforeEach( () => {
         mockRes.status = sinon.stub().returns(mockRes);
-        mockRes.send = sinon.stub().returns(mockRes);
+        mockRes.json = sinon.stub().returns(mockRes);
     });
 
     afterEach( () => {
