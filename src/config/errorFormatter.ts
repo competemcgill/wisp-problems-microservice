@@ -1,9 +1,9 @@
-import { ErrorFormatter } from "express-validator/check";
+import { ErrorFormatter } from 'express-validator/check';
 
-const errorMessage: ErrorFormatter<{}> = ({ location, msg, param }): {} => {
+const errorMessage = ({ location, msg, param }) => {
     return {
         status: 422,
-        message: `${location}[${param}]: ${msg}`
+        message: `${location}[${param}]: ${msg}`,
     };
 };
 

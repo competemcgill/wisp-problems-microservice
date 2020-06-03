@@ -1,37 +1,39 @@
-import { Document, Model, model, Schema } from "mongoose";
-import { IProblem } from "../../interfaces/IProblem";
+import { Document, Model, model, Schema } from 'mongoose';
+import { IProblem } from '../../interfaces/IProblem';
 
-export interface IProblemModel extends IProblem, Document { }
+export interface IProblemModel extends IProblem, Document {}
 
 const problemSchema: Schema = new Schema(
     {
         title: String,
         source: {
             type: String,
-            enum: ["CODEFORCES", "OTHER"],
+            enum: ['CODEFORCES', 'OTHER'],
         },
         problemId: {
             type: String,
-            index: true
+            index: true,
         },
         sourceLink: String,
-        problemSetIds: [{
-            type: Schema.Types.ObjectId,
-            ref: "Problem"
-        }],
+        problemSetIds: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: 'Problem',
+            },
+        ],
         problemMetadata: {
             platformProblemId: String,
             difficulty: {
                 type: String,
-                enum: ["easy", "medium", "hard"]
-            }
+                enum: ['easy', 'medium', 'hard'],
+            },
         },
     },
     {
-        timestamps: true
-    }
+        timestamps: true,
+    },
 );
 
-const Problem: Model<IProblemModel> = model("Problem", problemSchema);
+const Problem: Model<IProblemModel> = model('Problem', problemSchema);
 
 export { Problem };
