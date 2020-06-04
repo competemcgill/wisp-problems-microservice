@@ -24,7 +24,6 @@
     "url": "https://github.com/Compete-McGill/wisp-problems-microservice/issues"
   },
   "homepage": "https://github.com/Compete-McGill/wisp-problems-microservice#readme",
-  "devDependencies": {},
   "dependencies": {
     "@babel/core": "^7.0.0",
     "@babel/preset-typescript": "^7.3.3",
@@ -71,5 +70,17 @@
     "ts-node": "^8.1.0",
     "typescript": "^3.4.5",
     "winston": "^3.2.1"
+  },
+  "devDependencies": {
+    "husky": "^4.2.5",
+    "lint-staged": "^10.2.9"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{js,ts}": "eslint --fix --max-warnings 0 '{src,tests}/**/*.{js,ts}'"
   }
 }
