@@ -6,11 +6,18 @@ module.exports = {
 	},
 	extends: [
 		"plugin:@typescript-eslint/recommended",
-		"prettier/@typescript-eslint", // Uses eslint-config-prettier to disable ESLint rules from @typescript-eslint/eslint-plugin that would conflict with prettier
+		"prettier/@typescript-eslint",
 		"plugin:prettier/recommended"
 	],
 	rules: {
-		// Place to specify ESLint rules. Can be used to overwrite rules specified from the extended configs
-		// e.g. "@typescript-eslint/explicit-function-return-type": "off",
+		// "indent": ["error", 4],
+		// "brace-style": ["error", "1tbs", { "allowSingleLine": true }],
+		// "no-var": "warn",
+		// "quotes": ["error", "single", { "avoidEscape": true }],
+		// "semi": ["error", "always"],
+		// "curly": "error",
+		//
+		// "no-trailing-spaces": ["error", { "skipBlankLines": true , "ignoreComments": true }],
+		// "prefer-const": "error"
 	}
 };
