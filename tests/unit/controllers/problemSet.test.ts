@@ -9,6 +9,7 @@ import { IProblemSetModel, ProblemSet } from "../../../src/database/models/probl
 import { IProblemSet } from "../../../src/interfaces/IProblemSet";
 import { IProblemModel } from "../../../src/database/models/problem";
 import { validatorStubs, validationErrorWithMessage, emptyValidationError } from "../stubs/misc"
+import { testProblemSetModel1, testProblemSetModel2, testProblemSetModel1Doc, testProblemModel1, testProblemSetModel1IncludeProblems, testProblemSet1 } from "../../util/sampleData";
 
 // let stubs;
 let stubs = {
@@ -19,93 +20,6 @@ let stubs = {
 stubs.problemDB.restore()
 stubs.problemSetDB.restore()
 stubs.validators.restore()
-
-
-const testProblem1: IProblem = {
-    title: "Test Problem",
-    problemId: "27796f7b6717753aeee14bb4ba2acf6f55c88956",
-    source: PlatformName[0],
-    sourceLink: "https://codeforces.com/problemset/problem/1/A",
-    problemSetIds: ["exampleProblemSetMongoId1"],
-    problemMetadata: {
-        platformProblemId: "1A",
-        difficulty: Difficulty[0]
-    }
-};
-
-const testProblemModel1 = <IProblemModel>{
-    _id: "exampleProblemMongoId1",
-    title: "Test Problem",
-    problemId: "27796f7b6717753aeee14bb4ba2acf6f55c88956",
-    source: PlatformName[0],
-    sourceLink: "https://codeforces.com/problemset/problem/1/A",
-    problemSetIds: ["exampleProblemSetMongoId1"],
-    problemMetadata: {
-        platformProblemId: "1A",
-        difficulty: Difficulty[0]
-    },
-    __v: 0
-};
-
-
-const testProblemSet1: IProblemSet = {
-    title: "Test Problem Set 1",
-    description: "Test problem set 1 description.",
-    tags: ["Dynamic programming", "Test"],
-    problemCount: 2
-};
-
-const testProblemSet2: IProblemSet = {
-    title: "Test Problem Set 2",
-    description: "Test problem set 2 description.",
-    tags: ["Graph Theory", "Test"],
-    problemCount: 1
-}
-
-const testProblemSetModel1 = <IProblemSetModel>{
-    _id: "exampleProblemSetMongoId1",
-    title: "Test Problem Set 1",
-    description: "Test problem set 1 description.",
-    tags: ["Dynamic programming", "Test"],
-    problemCount: 1,
-    __v: 0
-}
-
-const testProblemSetModel1Doc: any = {
-    _id: "exampleProblemSetMongoId1",
-    title: "Test Problem Set 1",
-    description: "Test problem set 1 description.",
-    tags: ["Dynamic programming", "Test"],
-    problemCount: 1,
-    __v: 0,
-    _doc: {
-        _id: "exampleProblemSetMongoId1",
-        title: "Test Problem Set 1",
-        description: "Test problem set 1 description.",
-        tags: ["Dynamic programming", "Test"],
-        problemCount: 1,
-        __v: 0
-    }
-}
-
-const testProblemSetModel1IncludeProblems = {
-    _id: "exampleProblemSetMongoId1",
-    title: "Test Problem Set 1",
-    description: "Test problem set 1 description.",
-    tags: ["Dynamic programming", "Test"],
-    problemCount: 1,
-    __v: 0,
-    problems: [testProblemModel1]
-}
-
-const testProblemSetModel2 = <IProblemSetModel>{
-    _id: "exampleProblemSetMongoId2",
-    title: "Test Problem Set 2",
-    description: "Test problem set 2 description.",
-    tags: ["Graph Theory", "Test"],
-    problemCount: 1,
-    __v: 0
-}
 
 
 describe("Problem sets controller tests", () => {
