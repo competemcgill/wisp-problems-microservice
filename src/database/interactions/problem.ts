@@ -23,7 +23,10 @@ export const problemDBInteractions = {
         return Problem.find({ problemSetIds: problemSetIds }).exec();
     },
 
-    findByProblemNumberAndPlatform: (problemNumber: string, platform: string): Promise<IProblemModel> => {
+    findByProblemNumberAndPlatform: (
+        problemNumber: string,
+        platform: string
+    ): Promise<IProblemModel> => {
         const hash = calculateProblemHash(problemNumber, platform);
         return Problem.findOne({ problemId: hash }).exec();
     },
@@ -32,8 +35,13 @@ export const problemDBInteractions = {
         return Problem.findOne({ problemId: generatedProblemId }).exec();
     },
 
-    update: (problemId: string, newProblem: IProblem): Promise<IProblemModel> => {
-        return Problem.findByIdAndUpdate(problemId, newProblem, { new: true }).exec();
+    update: (
+        problemId: string,
+        newProblem: IProblem
+    ): Promise<IProblemModel> => {
+        return Problem.findByIdAndUpdate(problemId, newProblem, {
+            new: true,
+        }).exec();
     },
 
     delete: (problemId: string): Promise<IProblemModel> => {

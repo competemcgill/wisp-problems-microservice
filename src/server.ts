@@ -3,7 +3,9 @@ import mongoose from "mongoose";
 import { logger } from "./config/logger";
 
 let dbUrl = "";
-process.env.DB_URL ? (dbUrl = process.env.DB_URL) : (dbUrl = "mongodb://mongo:27017/wisp");
+process.env.DB_URL
+    ? (dbUrl = process.env.DB_URL)
+    : (dbUrl = "mongodb://mongo:27017/wisp");
 
 mongoose.connect(dbUrl, {
     useNewUrlParser: true,

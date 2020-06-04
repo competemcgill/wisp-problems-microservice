@@ -14,9 +14,12 @@ const problemSetSchema: Schema = new Schema(
     },
     {
         timestamps: true,
-    },
+    }
 );
 
-const ProblemSet: Model<IProblemSetModel> = model("ProblemSet", problemSetSchema);
+const ProblemSet: Model<IProblemSetModel> = model(
+    "ProblemSet",
+    problemSetSchema
+);
 
 export { ProblemSet };

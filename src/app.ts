@@ -17,13 +17,12 @@ app.use(expressValidator());
 if (process.env.NODE_ENV != "test") app.use(requestLoggerConfig);
 if (process.env.NODE_ENV != "test") app.use(errorLoggerConfig);
 app.use(bodyParser.json());
-if (process.env.NODE_ENV == "dev") app.use(bodyParser.urlencoded({ extended: true }));
+if (process.env.NODE_ENV == "dev")
+    app.use(bodyParser.urlencoded({ extended: true }));
 if (process.env.NODE_ENV != "production") swaggerDoc(app);
 
 app.use("/problems", problemRouter);
 app.use("/problemSets", problemSetRouter);
-
-process.env.NODE_ENV || "dev";
 
 app.use((req: Request, res: Response) => {
     res.status(404).send({

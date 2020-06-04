@@ -1,5 +1,9 @@
 import sinon from "sinon";
-import { IProblem, Difficulty, PlatformName } from "../../../src/interfaces/IProblem";
+import {
+    IProblem,
+    Difficulty,
+    PlatformName,
+} from "../../../src/interfaces/IProblem";
 import { problemController } from "../../../src/controllers/problem";
 import { problemDBInteractionsStubs } from "../stubs/problem";
 import { problemSetDBInteractionsStubs } from "../stubs/problemSet";

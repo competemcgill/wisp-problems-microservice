@@ -31,7 +31,7 @@ const problemSchema: Schema = new Schema(
     },
     {
         timestamps: true,
-    },
+    }
 );
 
 const Problem: Model<IProblemModel> = model("Problem", problemSchema);

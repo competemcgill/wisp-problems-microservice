@@ -4,26 +4,34 @@ import { problemSetValidator } from "../validators/problemSet";
 
 const problemSetRouter: Router = Router();
 
-problemSetRouter.get("/", problemSetValidator("GET /problemSets"), problemSetController.index);
+problemSetRouter.get(
+    "/",
+    problemSetValidator("GET /problemSets"),
+    problemSetController.index
+);
 
 problemSetRouter.get(
     "/:problemSetId",
     problemSetValidator("GET /problemSets/:problemSetId"),
-    problemSetController.show,
+    problemSetController.show
 );
 
-problemSetRouter.post("/", problemSetValidator("POST /problemSets"), problemSetController.create);
+problemSetRouter.post(
+    "/",
+    problemSetValidator("POST /problemSets"),
+    problemSetController.create
+);
 
 problemSetRouter.put(
     "/:problemSetId",
     problemSetValidator("PUT /problemSets/:problemSetId"),
-    problemSetController.update,
+    problemSetController.update
 );
 
 problemSetRouter.delete(
     "/:problemSetId",
     problemSetValidator("DELETE /problemSets/:problemSetId"),
-    problemSetController.delete,
+    problemSetController.delete
 );
 
 export { problemSetRouter };

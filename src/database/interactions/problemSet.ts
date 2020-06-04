@@ -14,8 +14,13 @@ export const problemSetDBInteractions = {
         return ProblemSet.findOne({ _id: problemSetId }).exec();
     },
 
-    update: (problemSetId: string, newProblemSet: IProblemSet): Promise<IProblemSetModel> => {
-        return ProblemSet.findByIdAndUpdate(problemSetId, newProblemSet, { new: true }).exec();
+    update: (
+        problemSetId: string,
+        newProblemSet: IProblemSet
+    ): Promise<IProblemSetModel> => {
+        return ProblemSet.findByIdAndUpdate(problemSetId, newProblemSet, {
+            new: true,
+        }).exec();
     },
 
     delete: (problemSetId: string): Promise<IProblemSetModel> => {
