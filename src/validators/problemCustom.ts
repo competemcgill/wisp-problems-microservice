@@ -1,5 +1,5 @@
-import { problemSetDBInteractions } from '../database/interactions/problemSet';
-import { Difficulty, PlatformName } from '../interfaces/IProblem';
+import { problemSetDBInteractions } from "../database/interactions/problemSet";
+import { Difficulty, PlatformName } from "../interfaces/IProblem";
 
 export const validateProblemSetIds = async (problemSetIds: Array<string>) => {
     const promiseArray = problemSetIds.map((problemSetId) => problemSetDBInteractions.find(problemSetId));
@@ -9,8 +9,8 @@ export const validateProblemSetIds = async (problemSetIds: Array<string>) => {
 
 export const validateProblemMetadata = (problemMetadata) => {
     return (
-        'platformProblemId' in problemMetadata &&
-        'difficulty' in problemMetadata &&
+        "platformProblemId" in problemMetadata &&
+        "difficulty" in problemMetadata &&
         problemMetadata.difficulty.toLowerCase() in Difficulty
     );
 };

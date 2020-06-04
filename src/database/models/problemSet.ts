@@ -1,5 +1,5 @@
-import { Document, Model, model, Schema } from 'mongoose';
-import { IProblemSet } from '../../interfaces/IProblemSet';
+import { Document, Model, model, Schema } from "mongoose";
+import { IProblemSet } from "../../interfaces/IProblemSet";
 
 export interface IProblemSetModel extends IProblemSet, Document {}
 
@@ -17,6 +17,6 @@ const problemSetSchema: Schema = new Schema(
     },
 );
 
-const ProblemSet: Model<IProblemSetModel> = model('ProblemSet', problemSetSchema);
+const ProblemSet: Model<IProblemSetModel> = model("ProblemSet", problemSetSchema);
 
 export { ProblemSet };

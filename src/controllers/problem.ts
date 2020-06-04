@@ -1,13 +1,13 @@
-import { Request, Response } from 'express';
-import { problemDBInteractions } from '../database/interactions/problem';
-import { Problem, IProblemModel } from '../database/models/problem';
-import { IProblem } from '../interfaces/IProblem';
-import { validationResult } from 'express-validator/check';
-import { errorMessage } from '../config/errorFormatter';
-import { statusCodes } from '../config/statusCodes';
-import { calculateProblemHash } from '../util/hash';
-import { problemSetDBInteractions } from '../database/interactions/problemSet';
-import { IProblemSetModel } from '../database/models/problemSet';
+import { Request, Response } from "express";
+import { problemDBInteractions } from "../database/interactions/problem";
+import { Problem, IProblemModel } from "../database/models/problem";
+import { IProblem } from "../interfaces/IProblem";
+import { validationResult } from "express-validator/check";
+import { errorMessage } from "../config/errorFormatter";
+import { statusCodes } from "../config/statusCodes";
+import { calculateProblemHash } from "../util/hash";
+import { problemSetDBInteractions } from "../database/interactions/problemSet";
+import { IProblemSetModel } from "../database/models/problemSet";
 
 const problemController = {
     index: async (req: Request, res: Response) => {
@@ -31,7 +31,7 @@ const problemController = {
                     ? res.status(statusCodes.SUCCESS).json(problem)
                     : res
                           .status(statusCodes.NOT_FOUND)
-                          .json({ status: statusCodes.NOT_FOUND, message: 'Problem not found' });
+                          .json({ status: statusCodes.NOT_FOUND, message: "Problem not found" });
             } catch (error) {
                 res.status(statusCodes.SERVER_ERROR).json(error);
             }
@@ -50,7 +50,7 @@ const problemController = {
                     ? res.status(statusCodes.SUCCESS).json(problem)
                     : res
                           .status(statusCodes.NOT_FOUND)
-                          .json({ status: statusCodes.NOT_FOUND, message: 'Problem not found' });
+                          .json({ status: statusCodes.NOT_FOUND, message: "Problem not found" });
             } catch (error) {
                 res.status(statusCodes.SERVER_ERROR).json(error);
             }
@@ -69,7 +69,7 @@ const problemController = {
 
                 const platform = problem.source;
                 let platformProblemId = problem.problemMetadata.platformProblemId;
-                if (platform == 'CODEFORCES') {
+                if (platform == "CODEFORCES") {
                     platformProblemId = platformProblemId.toUpperCase();
                 }
 
@@ -106,7 +106,7 @@ const problemController = {
                 if (!problem)
                     res.status(statusCodes.NOT_FOUND).json({
                         status: statusCodes.NOT_FOUND,
-                        message: 'Problem not found',
+                        message: "Problem not found",
                     });
                 else {
                     const updatedProblemBody: IProblem = {
@@ -117,7 +117,7 @@ const problemController = {
 
                     let platformProblemId = updatedProblemBody.problemMetadata.platformProblemId;
                     const platform = updatedProblemBody.source;
-                    if (platform == 'CODEFORCES') {
+                    if (platform == "CODEFORCES") {
                         platformProblemId = platformProblemId.toUpperCase();
                     }
                     updatedProblemBody.problemId = calculateProblemHash(platform, platformProblemId);
@@ -152,10 +152,10 @@ const problemController = {
                 if (!problem) {
                     res.status(statusCodes.NOT_FOUND).json({
                         status: statusCodes.NOT_FOUND,
-                        message: 'Problem not found',
+                        message: "Problem not found",
                     });
                 } else {
-                    const deletedProblem: IProblemModel = await problemDBInteractions.delete(problemId);
+                    await problemDBInteractions.delete(problemId);
                     for (const problemSetId of problem.problemSetIds) {
                         const problemCount: number = await problemDBInteractions.countInProblemSet(problemSetId);
                         const currProblemSet: IProblemSetModel = await problemSetDBInteractions.find(problemSetId);

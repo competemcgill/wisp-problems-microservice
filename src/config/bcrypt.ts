@@ -1,4 +1,4 @@
-import * as bcrypt from 'bcryptjs';
+import * as bcrypt from "bcryptjs";
 
 export const bcryptPassword = {
     generateHash: (password: string): string => {

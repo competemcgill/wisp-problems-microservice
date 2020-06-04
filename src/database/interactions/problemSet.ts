@@ -1,5 +1,5 @@
-import { IProblemSet } from '../../interfaces/IProblemSet';
-import { ProblemSet, IProblemSetModel } from '../models/problemSet';
+import { IProblemSet } from "../../interfaces/IProblemSet";
+import { ProblemSet, IProblemSetModel } from "../models/problemSet";
 
 export const problemSetDBInteractions = {
     create: (problemSet: IProblemSet): Promise<IProblemSetModel> => {

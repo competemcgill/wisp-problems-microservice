@@ -4,20 +4,22 @@ module.exports = {
 		ecmaVersion: 2020, // Allows for the parsing of modern ECMAScript features
 		sourceType: "module" // Allows for the use of imports
 	},
+	root: true,
+	plugins: [
+		"prettier",
+		"@typescript-eslint"
+ ],
 	extends: [
-		"plugin:@typescript-eslint/recommended",
 		"prettier/@typescript-eslint",
-		"plugin:prettier/recommended"
+		"plugin:prettier/recommended",
+		"plugin:@typescript-eslint/recommended"
 	],
 	rules: {
-		// "indent": ["error", 4],
-		// "brace-style": ["error", "1tbs", { "allowSingleLine": true }],
-		// "no-var": "warn",
-		// "quotes": ["error", "single", { "avoidEscape": true }],
-		// "semi": ["error", "always"],
-		// "curly": "error",
-		//
-		// "no-trailing-spaces": ["error", { "skipBlankLines": true , "ignoreComments": true }],
-		// "prefer-const": "error"
+		"@typescript-eslint/explicit-function-return-type": "off",
+		"@typescript-eslint/explicit-module-boundary-types": "off",
+		"@typescript-eslint/no-explicit-any": "off",
+		"prettier/prettier": ["error", { "singleQuote": false }],
+		"no-trailing-spaces": ["error", { "ignoreComments": true }],
+		"prefer-const": "error"
 	}
 };

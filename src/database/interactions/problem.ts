@@ -1,6 +1,6 @@
-import { IProblem } from '../../interfaces/IProblem';
-import { Problem, IProblemModel } from '../models/problem';
-import { calculateProblemHash } from '../../util/hash';
+import { IProblem } from "../../interfaces/IProblem";
+import { Problem, IProblemModel } from "../models/problem";
+import { calculateProblemHash } from "../../util/hash";
 
 export const problemDBInteractions = {
     create: (problem: IProblem): Promise<IProblemModel> => {

@@ -1,5 +1,5 @@
-import * as winston from 'winston';
-import { errorLogger } from 'express-winston';
+import * as winston from "winston";
+import { errorLogger } from "express-winston";
 
 const errorLoggerConfig = errorLogger({
     transports: [new winston.transports.Console()],
