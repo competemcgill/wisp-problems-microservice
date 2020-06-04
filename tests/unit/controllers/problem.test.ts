@@ -1,36 +1,27 @@
 import sinon from "sinon";
-import { IProblem, Difficulty, PlatformName } from "../../../src/interfaces/IProblem";
-import { IProblemSet } from "../../../src/interfaces/IProblemSet";
 import { problemController } from "../../../src/controllers/problem";
 import { problemDBInteractionsStubs } from "../stubs/problem";
 import { problemSetDBInteractionsStubs } from "../stubs/problemSet";
 import { mockReq, mockRes } from "sinon-express-mock";
+import { validatorStubs, validationErrorWithMessage, emptyValidationError } from "../stubs/misc"
+import { testProblemModel1 } from "../../util/sampleData";
 
-let stubs;
-
-const testProblemSet: IProblemSet = {
-    title: "Test Problem Set",
-    description: "Test problem set description.",
-    tags: ["Dynamic programming", "Test"],
-    problemCount: 1
+// Initialized outside of "describe" blocks to ensure typesafety + intellisense
+let stubs = {
+    problemDB: problemDBInteractionsStubs(),
+    problemSetDB: problemSetDBInteractionsStubs(),
+    validators: validatorStubs()
 };
-const testProblem: IProblem = {
-    title: "Test Problem",
-    problemId: "27796f7b6717753aeee14bb4ba2acf6f55c88956",
-    source: PlatformName[0],
-    sourceLink: "https://codeforces.com/problemset/problem/1/A",
-    problemSetIds: [],
-    problemMetadata: {
-        platformProblemId: "1A",
-        difficulty: Difficulty[0]
-    }
-};
+stubs.problemDB.restore()
+stubs.problemSetDB.restore()
+stubs.validators.restore()
 
 describe("Problems controller tests", () => {
     before(() => {
         stubs = {
-            problemDBStubs: problemDBInteractionsStubs(),
-            problemSetDBStubs: problemSetDBInteractionsStubs()
+            problemDB: problemDBInteractionsStubs(),
+            problemSetDB: problemSetDBInteractionsStubs(),
+            validators: validatorStubs()
         }
     });
 
@@ -44,24 +35,25 @@ describe("Problems controller tests", () => {
     });
 
     after(() => {
-        stubs.problemDBStubs.restore();
-        stubs.problemSetDBStubs.restore();
+        stubs.problemDB.restore();
+        stubs.problemSetDB.restore();
+        stubs.validators.restore();
     });
 
     describe("PROBLEMS: list", () => {
 
         it("status 200: returns successfully a list of a single tests problem", async () => {
-            stubs.problemDBStubs.all.returns([testProblem]);
+            stubs.problemDB.all.resolves([testProblemModel1]);
             await problemController.index(mockReq, mockRes);
-            sinon.assert.calledOnce(stubs.problemDBStubs.all);
+            sinon.assert.calledOnce(stubs.problemDB.all);
             sinon.assert.calledWith(mockRes.status, 200);
-            sinon.assert.calledWith(mockRes.json, [testProblem]);
+            sinon.assert.calledWith(mockRes.json, [testProblemModel1]);
         });
 
         it("status 500: returns server error code if server fails", async () => {
-            stubs.problemDBStubs.all.throws();
+            stubs.problemDB.all.throws();
             await problemController.index(mockReq, mockRes);
-            sinon.assert.calledOnce(stubs.problemDBStubs.all);
+            sinon.assert.calledOnce(stubs.problemDB.all);
             sinon.assert.calledWith(mockRes.status, 500);
         });
     });

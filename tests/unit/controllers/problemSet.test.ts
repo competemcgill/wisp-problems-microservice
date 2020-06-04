@@ -1,17 +1,13 @@
 import sinon from "sinon";
-import { IProblem, Difficulty, PlatformName } from "../../../src/interfaces/IProblem";
 import { problemSetDBInteractionsStubs } from "../stubs/problemSet";
 import { problemSetController } from "../../../src/controllers/problemSet";
 import { mockReq, mockRes } from "sinon-express-mock";
 import { problemDBInteractionsStubs } from "../stubs/problem";
 import { statusCodes } from "../../../src/config/statusCodes";
-import { IProblemSetModel, ProblemSet } from "../../../src/database/models/problemSet";
-import { IProblemSet } from "../../../src/interfaces/IProblemSet";
-import { IProblemModel } from "../../../src/database/models/problem";
 import { validatorStubs, validationErrorWithMessage, emptyValidationError } from "../stubs/misc"
 import { testProblemSetModel1, testProblemSetModel2, testProblemSetModel1Doc, testProblemModel1, testProblemSetModel1IncludeProblems, testProblemSet1 } from "../../util/sampleData";
 
-// let stubs;
+// Initialized outside of "describe" blocks to ensure typesafety + intellisense
 let stubs = {
     problemDB: problemDBInteractionsStubs(),
     problemSetDB: problemSetDBInteractionsStubs(),
