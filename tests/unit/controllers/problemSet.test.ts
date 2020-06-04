@@ -403,4 +403,70 @@ describe("Problem sets controller tests", () => {
 
     });
 
+    describe("Delete", () => {
+        let req;
+        beforeEach(() => {
+            req = mockReq({
+                params: {
+                    problemSetId: testProblemSetModel1._id
+                }
+            })
+        })
+
+        it("status 200: returns status code SUCCESS upon deletion", async () => {
+            stubs.validators.validationResult.returns(<any>emptyValidationError());
+            stubs.problemSetDB.find.resolves(testProblemSetModel1);
+            stubs.problemSetDB.delete.resolves(testProblemSetModel1);
+
+            await problemSetController.delete(req, mockRes);
+
+            sinon.assert.calledOnce(stubs.problemSetDB.find);
+            sinon.assert.calledOnce(stubs.problemSetDB.delete);
+            sinon.assert.calledWith(stubs.problemSetDB.find, req.params.problemSetId);
+            sinon.assert.calledWith(stubs.problemSetDB.delete, req.params.problemSetId);
+            sinon.assert.calledWith(mockRes.status, statusCodes.SUCCESS);
+            sinon.assert.calledWith(mockRes.json);
+        });
+
+        it("status 404: returns an appropriate response if user doesn't exist", async () => {
+            stubs.validators.validationResult.returns(<any>emptyValidationError());
+            stubs.problemSetDB.find.resolves(null);
+            stubs.problemSetDB.delete.resolves(null);
+
+            await problemSetController.delete(req, mockRes);
+
+            sinon.assert.calledOnce(stubs.problemSetDB.find);
+            sinon.assert.notCalled(stubs.problemSetDB.delete);
+            sinon.assert.calledWith(stubs.problemSetDB.find, req.params.problemSetId);
+            sinon.assert.calledWith(mockRes.status, statusCodes.NOT_FOUND);
+            sinon.assert.calledWith(mockRes.json, { status: statusCodes.NOT_FOUND, message: "ProblemSet not found" });
+        });
+
+        it("status 422: returns an appropriate response with validation error", async () => {
+            const errorMsg = { status: statusCodes.MISSING_PARAMS, message: "params[problemSetId]: Invalid or missing 'problemSetId'" };
+            stubs.validators.validationResult.returns(<any>validationErrorWithMessage(errorMsg));
+            stubs.problemSetDB.find.resolves(null);
+            stubs.problemSetDB.delete.resolves(null);
+
+            await problemSetController.delete(req, mockRes);
+
+            sinon.assert.calledOnce(stubs.validators.validationResult);
+            sinon.assert.notCalled(stubs.problemSetDB.find);
+            sinon.assert.notCalled(stubs.problemSetDB.delete);
+            sinon.assert.calledWith(mockRes.status, statusCodes.MISSING_PARAMS);
+            sinon.assert.calledWith(mockRes.json, errorMsg);
+        });
+
+        it("status 500: returns error if server fails", async () => {
+            stubs.problemSetDB.find.throws();
+            stubs.validators.validationResult.returns(<any>emptyValidationError());
+
+            await problemSetController.delete(req, mockRes);
+            sinon.assert.calledOnce(stubs.problemSetDB.find);
+            sinon.assert.calledWith(stubs.problemSetDB.find, req.params.problemSetId);
+            sinon.assert.calledWith(mockRes.status, statusCodes.SERVER_ERROR);
+        });
+
+    });
+
 });
