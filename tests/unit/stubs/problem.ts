@@ -1,7 +1,5 @@
 import sinon from "sinon";
-import check from "express-validator/check";
 import { problemDBInteractions } from "../../../src/database/interactions/problem";
-import { hash } from "../../../src/util/hash";
 
 export const problemDBInteractionsStubs = () => {
     return {
@@ -28,25 +26,3 @@ export const problemDBInteractionsStubs = () => {
         }
     };
 };
-
-export const validatorStubs = () => {
-    return {
-        validationResult: sinon.stub(check, "validationResult"),
-
-        restore() {
-            this.validationResult.restore();
-        }
-    };
-};
-
-export const problemUtilStubs = () => {
-    return {
-        hash: {
-            calculateProblemHash: sinon.stub(hash, "calculateProblemHash")
-        },
-
-        restore() {
-            this.hash.calculateProblemHash.restore();
-        }
-    }
-}

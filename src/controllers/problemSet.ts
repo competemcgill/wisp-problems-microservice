@@ -42,6 +42,10 @@ const problemSetController = {
                 const problemSetId: string = req.params.problemSetId;
                 const problemSet: IProblemSetModel = await problemSetDBInteractions.find(problemSetId);
 
+                if (!problemSet) {
+                    return res.status(statusCodes.NOT_FOUND).json({ status: statusCodes.NOT_FOUND, message: "ProblemSet not found" })
+                }
+
                 // TODO: find a non-hacky way to include IProblem[] array optionally into response with interface
                 const result: any = problemSet["_doc"];
                 if (req.query.includeProblems == "true") {
@@ -49,7 +53,7 @@ const problemSetController = {
                     result.problems = problems;
                 }
 
-                problemSet ? res.status(statusCodes.SUCCESS).json(result) : res.status(statusCodes.NOT_FOUND).json({ status: statusCodes.NOT_FOUND, message: "ProblemSet not found" });
+                res.status(statusCodes.SUCCESS).json(result);
             } catch (error) {
                 res.status(statusCodes.SERVER_ERROR).json(error);
             }

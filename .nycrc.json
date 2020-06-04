@@ -2,5 +2,11 @@
     "extends": "@istanbuljs/nyc-config-typescript",
     "include": [
         "src/**/*.ts"
+    ],
+    "exclude": [
+        "src/database/**/*.ts",
+        "src/config/statusCodes.ts",
+        "src/config/*ogger.ts",
+        "src/interfaces/**/*.ts"
     ]
 }
