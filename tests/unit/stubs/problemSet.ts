@@ -15,6 +15,6 @@ export const problemSetDBInteractionsStubs = () => {
             this.find.restore();
             this.update.restore();
             this.delete.restore();
-        },
+        }
     };
 };

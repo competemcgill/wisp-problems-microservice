@@ -7,5 +7,5 @@ export const bcryptPassword = {
 
     validate: (original: string, toCompare: string): boolean => {
         return bcrypt.compareSync(original, toCompare);
-    },
+    }
 };

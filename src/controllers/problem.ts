@@ -35,7 +35,7 @@ const problemController = {
                     ? res.status(statusCodes.SUCCESS).json(problem)
                     : res.status(statusCodes.NOT_FOUND).json({
                           status: statusCodes.NOT_FOUND,
-                          message: "Problem not found",
+                          message: "Problem not found"
                       });
             } catch (error) {
                 res.status(statusCodes.SERVER_ERROR).json(error);
@@ -60,7 +60,7 @@ const problemController = {
                     ? res.status(statusCodes.SUCCESS).json(problem)
                     : res.status(statusCodes.NOT_FOUND).json({
                           status: statusCodes.NOT_FOUND,
-                          message: "Problem not found",
+                          message: "Problem not found"
                       });
             } catch (error) {
                 res.status(statusCodes.SERVER_ERROR).json(error);
@@ -89,10 +89,7 @@ const problemController = {
 
                 const problemData: IProblem = {
                     ...problem,
-                    problemId: calculateProblemHash(
-                        platform,
-                        platformProblemId
-                    ),
+                    problemId: calculateProblemHash(platform, platformProblemId)
                 };
 
                 let newProblem: IProblemModel = await problemDBInteractions.create(
@@ -133,12 +130,12 @@ const problemController = {
                 if (!problem)
                     res.status(statusCodes.NOT_FOUND).json({
                         status: statusCodes.NOT_FOUND,
-                        message: "Problem not found",
+                        message: "Problem not found"
                     });
                 else {
                     const updatedProblemBody: IProblem = {
                         ...req.body,
-                        source: req.body.source.toUpperCase(),
+                        source: req.body.source.toUpperCase()
                     };
                     updatedProblemBody.problemMetadata.difficulty = updatedProblemBody.problemMetadata.difficulty.toLowerCase();
 
@@ -191,7 +188,7 @@ const problemController = {
                 if (!problem) {
                     res.status(statusCodes.NOT_FOUND).json({
                         status: statusCodes.NOT_FOUND,
-                        message: "Problem not found",
+                        message: "Problem not found"
                     });
                 } else {
                     await problemDBInteractions.delete(problemId);
@@ -211,7 +208,7 @@ const problemController = {
                 res.status(statusCodes.SERVER_ERROR).json(error);
             }
         }
-    },
+    }
 };
 
 export { problemController };

@@ -2,7 +2,7 @@ import sinon from "sinon";
 import {
     IProblem,
     Difficulty,
-    PlatformName,
+    PlatformName
 } from "../../../src/interfaces/IProblem";
 import { problemController } from "../../../src/controllers/problem";
 import { problemDBInteractionsStubs } from "../stubs/problem";
@@ -20,8 +20,8 @@ const testProblem: IProblem = {
     problemSetIds: [],
     problemMetadata: {
         platformProblemId: "1A",
-        difficulty: Difficulty[0],
-    },
+        difficulty: Difficulty[0]
+    }
 };
 
 describe("Problems controller tests", () => {

@@ -1,12 +1,12 @@
 export enum PlatformName {
     CODEFORCES,
-    OTHER,
+    OTHER
 }
 
 export enum Difficulty {
     easy,
     medium,
-    hard,
+    hard
 }
 
 export interface IProblem {

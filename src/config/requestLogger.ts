@@ -10,7 +10,7 @@ const requestLoggerConfig = logger({
     expressFormat: true,
     colorize: true,
     responseWhitelist: ["statusCode", "body"],
-    requestWhitelist: ["body"],
+    requestWhitelist: ["body"]
 });
 
 export { requestLoggerConfig };

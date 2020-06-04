@@ -40,11 +40,11 @@ export const problemDBInteractions = {
         newProblem: IProblem
     ): Promise<IProblemModel> => {
         return Problem.findByIdAndUpdate(problemId, newProblem, {
-            new: true,
+            new: true
         }).exec();
     },
 
     delete: (problemId: string): Promise<IProblemModel> => {
         return Problem.findByIdAndDelete(problemId).exec();
-    },
+    }
 };

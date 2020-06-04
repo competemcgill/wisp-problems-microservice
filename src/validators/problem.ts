@@ -2,7 +2,7 @@ import { body, param, ValidationChain } from "express-validator/check";
 import {
     validateProblemSetIds,
     validateProblemMetadata,
-    validateProblemPlatform,
+    validateProblemPlatform
 } from "./problemCustom";
 
 export function problemValidator(method: string): ValidationChain[] {
@@ -14,7 +14,7 @@ export function problemValidator(method: string): ValidationChain[] {
             return [
                 param("problemId", "Invalid or missing ':problemId'")
                     .exists()
-                    .isMongoId(),
+                    .isMongoId()
             ];
         }
         case "POST /problems": {
@@ -40,7 +40,7 @@ export function problemValidator(method: string): ValidationChain[] {
                     "Invalid or missing fields in 'problemMetadata'"
                 )
                     .exists()
-                    .custom(validateProblemMetadata),
+                    .custom(validateProblemMetadata)
             ];
         }
         case "PUT /problems/:problemId": {
@@ -68,14 +68,14 @@ export function problemValidator(method: string): ValidationChain[] {
                     "Invalid or missing fields in 'problemMetadata'"
                 )
                     .exists()
-                    .custom(validateProblemMetadata),
+                    .custom(validateProblemMetadata)
             ];
         }
         case "DELETE /problems/:problemId": {
             return [
                 param("problemId", "Invalid or missing ':problemId'")
                     .exists()
-                    .isMongoId(),
+                    .isMongoId()
             ];
         }
         case "GET /problems/:generatedProblemId/exists": {
@@ -83,7 +83,7 @@ export function problemValidator(method: string): ValidationChain[] {
                 param(
                     "generatedProblemId",
                     "Invalid or missing ':generatedProblemId'"
-                ).exists(),
+                ).exists()
             ];
         }
     }

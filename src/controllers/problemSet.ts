@@ -23,7 +23,7 @@ const problemSetController = {
                     );
                     result.push({
                         ...problemSet["_doc"],
-                        problems,
+                        problems
                     });
                 }
             }
@@ -60,7 +60,7 @@ const problemSetController = {
                     ? res.status(statusCodes.SUCCESS).json(result)
                     : res.status(statusCodes.NOT_FOUND).json({
                           status: statusCodes.NOT_FOUND,
-                          message: "ProblemSet not found",
+                          message: "ProblemSet not found"
                       });
             } catch (error) {
                 res.status(statusCodes.SERVER_ERROR).json(error);
@@ -77,7 +77,7 @@ const problemSetController = {
         } else {
             try {
                 const problemSetData: IProblemSet = {
-                    ...req.body,
+                    ...req.body
                 };
                 let newProblemSet: IProblemSetModel = await problemSetDBInteractions.create(
                     new ProblemSet(problemSetData)
@@ -105,11 +105,11 @@ const problemSetController = {
                 if (!problemSet)
                     res.status(statusCodes.NOT_FOUND).json({
                         status: statusCodes.NOT_FOUND,
-                        message: "ProblemSet not found",
+                        message: "ProblemSet not found"
                     });
                 else {
                     const updatedProblemSetBody: IProblemSet = {
-                        ...req.body,
+                        ...req.body
                     };
 
                     const updatedProblemSet: IProblemSetModel = await problemSetDBInteractions.update(
@@ -139,7 +139,7 @@ const problemSetController = {
                 if (!problemSet) {
                     res.status(statusCodes.NOT_FOUND).json({
                         status: statusCodes.NOT_FOUND,
-                        message: "ProblemSet not found",
+                        message: "ProblemSet not found"
                     });
                 } else {
                     await problemSetDBInteractions.delete(problemSetId);
@@ -149,7 +149,7 @@ const problemSetController = {
                 res.status(statusCodes.SERVER_ERROR).json(error);
             }
         }
-    },
+    }
 };
 
 export { problemSetController };

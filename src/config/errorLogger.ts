@@ -6,7 +6,7 @@ const errorLoggerConfig = errorLogger({
     format: winston.format.combine(
         winston.format.colorize(),
         winston.format.json()
-    ),
+    )
 });
 
 export { errorLoggerConfig };

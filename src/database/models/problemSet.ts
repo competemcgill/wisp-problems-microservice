@@ -8,12 +8,12 @@ const problemSetSchema: Schema = new Schema(
         title: String,
         description: String,
         tags: {
-            type: [String],
+            type: [String]
         },
-        problemCount: Number,
+        problemCount: Number
     },
     {
-        timestamps: true,
+        timestamps: true
     }
 );
 

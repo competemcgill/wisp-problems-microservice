@@ -19,11 +19,11 @@ export const problemSetDBInteractions = {
         newProblemSet: IProblemSet
     ): Promise<IProblemSetModel> => {
         return ProblemSet.findByIdAndUpdate(problemSetId, newProblemSet, {
-            new: true,
+            new: true
         }).exec();
     },
 
     delete: (problemSetId: string): Promise<IProblemSetModel> => {
         return ProblemSet.findByIdAndDelete(problemSetId).exec();
-    },
+    }
 };

@@ -9,7 +9,7 @@ export function problemSetValidator(method: string): ValidationChain[] {
                     "can be set to 'true' to include problems"
                 )
                     .optional()
-                    .isBoolean(),
+                    .isBoolean()
             ];
         }
         case "GET /problemSets/:problemSetId": {
@@ -22,7 +22,7 @@ export function problemSetValidator(method: string): ValidationChain[] {
                     "can be set to 'true' to include problems"
                 )
                     .optional()
-                    .isBoolean(),
+                    .isBoolean()
             ];
         }
         case "POST /problemSets": {
@@ -31,7 +31,7 @@ export function problemSetValidator(method: string): ValidationChain[] {
                 body("description", "Invalid or missing 'description'")
                     .isString()
                     .exists(),
-                body("tags", "Invalid or missing 'tags'").exists().isArray(),
+                body("tags", "Invalid or missing 'tags'").exists().isArray()
             ];
         }
         case "PUT /problemSets/:problemSetId": {
@@ -43,14 +43,14 @@ export function problemSetValidator(method: string): ValidationChain[] {
                 body("description", "Invalid or missing 'description'")
                     .isString()
                     .exists(),
-                body("tags", "Invalid or missing 'tags'").exists().isArray(),
+                body("tags", "Invalid or missing 'tags'").exists().isArray()
             ];
         }
         case "DELETE /problemSets/:problemSetId": {
             return [
                 param("problemSetId", "Invalid or missing ':problemSetId'")
                     .exists()
-                    .isMongoId(),
+                    .isMongoId()
             ];
         }
     }

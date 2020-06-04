@@ -1,7 +1,7 @@
 const errorMessage = ({ location, msg, param }) => {
     return {
         status: 422,
-        message: `${location}[${param}]: ${msg}`,
+        message: `${location}[${param}]: ${msg}`
     };
 };
 

@@ -27,7 +27,7 @@ app.use("/problemSets", problemSetRouter);
 app.use((req: Request, res: Response) => {
     res.status(404).send({
         status: 404,
-        message: "Invalid route",
+        message: "Invalid route"
     });
 });
 

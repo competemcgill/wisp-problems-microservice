@@ -32,6 +32,6 @@ export const problemDBInteractionsStubs = () => {
             this.findByGeneratedId.restore();
             this.update.restore();
             this.delete.restore();
-        },
+        }
     };
 };
