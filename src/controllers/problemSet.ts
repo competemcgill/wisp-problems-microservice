@@ -69,8 +69,7 @@ const problemSetController = {
                 const problemSetData: IProblemSet = {
                     ...req.body
                 };
-                let newProblemSet: IProblemSetModel = await problemSetDBInteractions.create(new ProblemSet(problemSetData));
-                newProblemSet = newProblemSet.toJSON();
+                let newProblemSet: IProblemSetModel = await problemSetDBInteractions.create(problemSetData);
                 res.status(statusCodes.SUCCESS).json(newProblemSet);
             } catch (error) {
                 res.status(statusCodes.SERVER_ERROR).json(error);

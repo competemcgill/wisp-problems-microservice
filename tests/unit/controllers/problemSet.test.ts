@@ -5,7 +5,7 @@ import { problemSetController } from "../../../src/controllers/problemSet";
 import { mockReq, mockRes } from "sinon-express-mock";
 import { problemDBInteractionsStubs } from "../stubs/problem";
 import { statusCodes } from "../../../src/config/statusCodes";
-import { IProblemSetModel } from "../../../src/database/models/problemSet";
+import { IProblemSetModel, ProblemSet } from "../../../src/database/models/problemSet";
 import { IProblemSet } from "../../../src/interfaces/IProblemSet";
 import { IProblemModel } from "../../../src/database/models/problem";
 import { validatorStubs, validationErrorWithMessage, emptyValidationError } from "../stubs/misc"
@@ -217,7 +217,7 @@ describe("Problem sets controller tests", () => {
             sinon.assert.calledWith(mockRes.json, testProblemSetModel1IncludeProblems);
         });
 
-        it("status 404: returns error if problem set not found", async () => {
+        it("status 404: returns an appropriate response if user doesn't exist", async () => {
             stubs.problemSetDB.find.resolves(null);
             stubs.validators.validationResult.returns(<any>emptyValidationError());
             req.params.problemSetId = "mongoIdThatDoesNotExist"
@@ -249,6 +249,158 @@ describe("Problem sets controller tests", () => {
             sinon.assert.calledWith(stubs.problemSetDB.find, req.params.problemSetId);
             sinon.assert.calledWith(mockRes.status, statusCodes.SERVER_ERROR);
         });
+    });
+
+    describe("Create", () => {
+        let req;
+        beforeEach(() => {
+            req = mockReq({
+                body: {
+                    ...testProblemSet1
+                }
+            })
+        })
+
+        it("status 200: returns successfully a created problem set", async () => {
+            stubs.problemSetDB.create.resolves(testProblemSetModel1);
+            stubs.validators.validationResult.returns(<any>emptyValidationError());
+            await problemSetController.create(req, mockRes);
+            sinon.assert.calledOnce(stubs.problemSetDB.create);
+            sinon.assert.calledWith(stubs.problemSetDB.create, req.body);
+            sinon.assert.calledWith(mockRes.status, statusCodes.SUCCESS);
+            sinon.assert.calledWith(mockRes.json, testProblemSetModel1);
+        });
+
+        it("status 422: returns an appropriate response with validation error", async () => {
+            const errorMsg = { status: statusCodes.MISSING_PARAMS, message: "body[title]: Invalid or missing 'title'" };
+            stubs.validators.validationResult.returns(<any>validationErrorWithMessage(errorMsg));
+            await problemSetController.create(req, mockRes);
+            sinon.assert.calledOnce(stubs.validators.validationResult);
+            sinon.assert.notCalled(stubs.problemSetDB.create);
+            sinon.assert.calledWith(mockRes.status, statusCodes.MISSING_PARAMS);
+            sinon.assert.calledWith(mockRes.json, errorMsg);
+        });
+
+        it("status 500: returns error if server fails", async () => {
+            stubs.problemSetDB.create.throws();
+            stubs.validators.validationResult.returns(<any>emptyValidationError());
+            await problemSetController.create(req, mockRes);
+            sinon.assert.calledOnce(stubs.problemSetDB.create);
+            sinon.assert.calledWith(stubs.problemSetDB.create, req.body);
+            sinon.assert.calledWith(mockRes.status, statusCodes.SERVER_ERROR);
+        });
+
+    });
+
+    describe("Update", () => {
+        let req;
+        beforeEach(() => {
+            req = mockReq({
+                params: {
+                    problemSetId: testProblemSetModel1._id
+                },
+                body: {
+                    ...testProblemSet1
+                }
+            })
+        })
+
+        it("status 200: returns successfully an updated title", async () => {
+            stubs.validators.validationResult.returns(<any>emptyValidationError());
+            stubs.problemSetDB.find.resolves(testProblemSetModel1);
+
+            const updatedUser = JSON.parse(JSON.stringify(testProblemSet1));
+            updatedUser._id = req.params.problemSetId
+            updatedUser.title = "Test Problem Set Title 1 Updated"
+            stubs.problemSetDB.update.resolves(updatedUser);
+
+            req.body.title = "Test Problem Set Title 1 Updated"
+            await problemSetController.update(req, mockRes);
+
+            sinon.assert.calledOnce(stubs.problemSetDB.find);
+            sinon.assert.calledOnce(stubs.problemSetDB.update);
+            sinon.assert.calledWith(stubs.problemSetDB.find, req.params.problemSetId);
+            sinon.assert.calledWith(stubs.problemSetDB.update, req.params.problemSetId, req.body);
+            sinon.assert.calledWith(mockRes.status, statusCodes.SUCCESS);
+            sinon.assert.calledWith(mockRes.json, updatedUser);
+        });
+
+        it("status 200: returns successfully multiple updated fields", async () => {
+            stubs.validators.validationResult.returns(<any>emptyValidationError());
+            stubs.problemSetDB.find.resolves(testProblemSetModel1);
+
+            const updatedUser = JSON.parse(JSON.stringify(testProblemSet1));
+            updatedUser._id = req.params.problemSetId
+            updatedUser.title = "Test Problem Set Title 1 Updated"
+            updatedUser.description = "description 1 Updated"
+            updatedUser.tags = ["Tag1", "Tag2"]
+            stubs.problemSetDB.update.resolves(updatedUser);
+
+            req.body.title = "Test Problem Set Title 1 Updated"
+            req.body.description = "description 1 Updated"
+            req.body.tags = ["Tag1", "Tag2"]
+            await problemSetController.update(req, mockRes);
+
+            sinon.assert.calledOnce(stubs.problemSetDB.find);
+            sinon.assert.calledOnce(stubs.problemSetDB.update);
+            sinon.assert.calledWith(stubs.problemSetDB.find, req.params.problemSetId);
+            sinon.assert.calledWith(stubs.problemSetDB.update, req.params.problemSetId, req.body);
+            sinon.assert.calledWith(mockRes.status, statusCodes.SUCCESS);
+            sinon.assert.calledWith(mockRes.json, updatedUser);
+        });
+
+        it("status 200: returns unchanged problem set if nothing is different", async () => {
+            stubs.validators.validationResult.returns(<any>emptyValidationError());
+            stubs.problemSetDB.find.resolves(testProblemSetModel1);
+
+            const updatedUser = JSON.parse(JSON.stringify(testProblemSet1));
+            updatedUser._id = req.params.problemSetId
+            stubs.problemSetDB.update.resolves(updatedUser);
+
+            await problemSetController.update(req, mockRes);
+
+            sinon.assert.calledOnce(stubs.problemSetDB.find);
+            sinon.assert.calledOnce(stubs.problemSetDB.update);
+            sinon.assert.calledWith(stubs.problemSetDB.find, req.params.problemSetId);
+            sinon.assert.calledWith(stubs.problemSetDB.update, req.params.problemSetId, req.body);
+            sinon.assert.calledWith(mockRes.status, statusCodes.SUCCESS);
+            sinon.assert.calledWith(mockRes.json, updatedUser);
+        });
+
+        it("status 404: returns an appropriate response if user doesn't exist", async () => {
+            stubs.problemSetDB.find.resolves(null);
+            stubs.validators.validationResult.returns(<any>emptyValidationError());
+            req.params.problemSetId = "mongoIdThatDoesNotExist"
+            await problemSetController.update(req, mockRes);
+            sinon.assert.calledOnce(stubs.problemSetDB.find);
+            sinon.assert.notCalled(stubs.problemDB.update);
+            sinon.assert.calledWith(stubs.problemSetDB.find, req.params.problemSetId);
+            sinon.assert.calledWith(mockRes.status, statusCodes.NOT_FOUND);
+            sinon.assert.calledWith(mockRes.json, { status: statusCodes.NOT_FOUND, message: "ProblemSet not found" });
+
+        });
+
+        it("status 422: returns an appropriate response with validation error", async () => {
+            const errorMsg = { status: statusCodes.MISSING_PARAMS, message: "body[title]: Invalid or missing 'title'" };
+            stubs.validators.validationResult.returns(<any>validationErrorWithMessage(errorMsg));
+            await problemSetController.update(req, mockRes);
+            sinon.assert.calledOnce(stubs.validators.validationResult);
+            sinon.assert.notCalled(stubs.problemSetDB.find);
+            sinon.assert.notCalled(stubs.problemSetDB.update);
+            sinon.assert.calledWith(mockRes.status, statusCodes.MISSING_PARAMS);
+            sinon.assert.calledWith(mockRes.json, errorMsg);
+        });
+
+        it("status 500: returns error if server fails", async () => {
+            stubs.problemSetDB.find.throws();
+            stubs.validators.validationResult.returns(<any>emptyValidationError());
+
+            await problemSetController.update(req, mockRes);
+            sinon.assert.calledOnce(stubs.problemSetDB.find);
+            sinon.assert.calledWith(stubs.problemSetDB.find, req.params.problemSetId);
+            sinon.assert.calledWith(mockRes.status, statusCodes.SERVER_ERROR);
+        });
+
     });
 
 });
