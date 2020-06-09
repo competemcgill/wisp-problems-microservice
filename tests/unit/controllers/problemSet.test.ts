@@ -4,7 +4,7 @@ import { problemSetController } from "../../../src/controllers/problemSet";
 import { mockReq, mockRes } from "sinon-express-mock";
 import { problemDBInteractionsStubs } from "../stubs/problem";
 import { statusCodes } from "../../../src/config/statusCodes";
-import { validatorStubs, validationErrorWithMessage, emptyValidationError } from "../stubs/misc"
+import { validatorStubs, validationErrorWithMessage, emptyValidationError } from "../stubs/validator"
 import { testProblemSetModel1, testProblemSetModel2, testProblemSetModel1Doc, testProblemModel1, testProblemSetModel1IncludeProblems, testProblemSet1 } from "../../util/sampleData";
 
 // Initialized outside of "describe" blocks to ensure typesafety + intellisense

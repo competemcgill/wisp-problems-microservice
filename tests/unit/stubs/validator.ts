@@ -1,6 +1,5 @@
 import sinon from "sinon"
 import check from "express-validator/check";
-import { hash } from "../../../src/util/hash";
 
 export const validatorStubs = () => {
     return {
@@ -33,16 +32,4 @@ export const validationErrorWithMessage = (errorMsg: { status: number; message: 
             };
         }
     };
-}
-
-export const problemUtilStubs = () => {
-    return {
-        hash: {
-            calculateProblemHash: sinon.stub(hash, "calculateProblemHash")
-        },
-
-        restore() {
-            this.hash.calculateProblemHash.restore();
-        }
-    }
 }
