@@ -9,7 +9,7 @@ export const problemSetDBInteractionsStubs = () => {
         update: sinon.stub(problemSetDBInteractions, "update"),
         delete: sinon.stub(problemSetDBInteractions, "delete"),
 
-        restoreStubs() {
+        restore() {
             this.create.restore();
             this.all.restore();
             this.find.restore();

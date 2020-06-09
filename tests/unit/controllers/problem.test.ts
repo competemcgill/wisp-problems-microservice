@@ -1,33 +1,28 @@
 import sinon from "sinon";
-import {
-    IProblem,
-    Difficulty,
-    PlatformName
-} from "../../../src/interfaces/IProblem";
 import { problemController } from "../../../src/controllers/problem";
 import { problemDBInteractionsStubs } from "../stubs/problem";
 import { problemSetDBInteractionsStubs } from "../stubs/problemSet";
 import { mockReq, mockRes } from "sinon-express-mock";
+import { validatorStubs } from "../stubs/validator";
+import { testProblemModel1 } from "../../util/sampleData";
 
-let problemDBStubs;
-let problemSetDBStubs;
-
-const testProblem: IProblem = {
-    title: "Test Problem",
-    problemId: "27796f7b6717753aeee14bb4ba2acf6f55c88956",
-    source: PlatformName[0],
-    sourceLink: "https://codeforces.com/problemset/problem/1/A",
-    problemSetIds: [],
-    problemMetadata: {
-        platformProblemId: "1A",
-        difficulty: Difficulty[0]
-    }
+// Initialized outside of "describe" blocks to ensure typesafety + intellisense
+let stubs = {
+    problemDB: problemDBInteractionsStubs(),
+    problemSetDB: problemSetDBInteractionsStubs(),
+    validators: validatorStubs()
 };
+stubs.problemDB.restore();
+stubs.problemSetDB.restore();
+stubs.validators.restore();
 
 describe("Problems controller tests", () => {
     before(() => {
-        problemDBStubs = problemDBInteractionsStubs();
-        problemSetDBStubs = problemSetDBInteractionsStubs();
+        stubs = {
+            problemDB: problemDBInteractionsStubs(),
+            problemSetDB: problemSetDBInteractionsStubs(),
+            validators: validatorStubs()
+        };
     });
 
     beforeEach(() => {
@@ -40,23 +35,24 @@ describe("Problems controller tests", () => {
     });
 
     after(() => {
-        problemDBStubs.restoreStubs();
-        problemSetDBStubs.restoreStubs();
+        stubs.problemDB.restore();
+        stubs.problemSetDB.restore();
+        stubs.validators.restore();
     });
 
     describe("PROBLEMS: list", () => {
         it("status 200: returns successfully a list of a single tests problem", async () => {
-            problemDBStubs.all.returns([testProblem]);
+            stubs.problemDB.all.resolves([testProblemModel1]);
             await problemController.index(mockReq, mockRes);
-            sinon.assert.calledOnce(problemDBStubs.all);
+            sinon.assert.calledOnce(stubs.problemDB.all);
             sinon.assert.calledWith(mockRes.status, 200);
-            sinon.assert.calledWith(mockRes.json, [testProblem]);
+            sinon.assert.calledWith(mockRes.json, [testProblemModel1]);
         });
 
         it("status 500: returns server error code if server fails", async () => {
-            problemDBStubs.all.throws();
+            stubs.problemDB.all.throws();
             await problemController.index(mockReq, mockRes);
-            sinon.assert.calledOnce(problemDBStubs.all);
+            sinon.assert.calledOnce(stubs.problemDB.all);
             sinon.assert.calledWith(mockRes.status, 500);
         });
     });

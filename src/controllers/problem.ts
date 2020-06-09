@@ -5,7 +5,7 @@ import { IProblem } from "../interfaces/IProblem";
 import { validationResult } from "express-validator/check";
 import { errorMessage } from "../config/errorFormatter";
 import { statusCodes } from "../config/statusCodes";
-import { calculateProblemHash } from "../util/hash";
+import { hash } from "../util/hash";
 import { problemSetDBInteractions } from "../database/interactions/problemSet";
 import { IProblemSetModel } from "../database/models/problemSet";
 
@@ -89,7 +89,10 @@ const problemController = {
 
                 const problemData: IProblem = {
                     ...problem,
-                    problemId: calculateProblemHash(platform, platformProblemId)
+                    problemId: hash.calculateProblemHash(
+                        platform,
+                        platformProblemId
+                    )
                 };
 
                 let newProblem: IProblemModel = await problemDBInteractions.create(
@@ -145,7 +148,7 @@ const problemController = {
                     if (platform == "CODEFORCES") {
                         platformProblemId = platformProblemId.toUpperCase();
                     }
-                    updatedProblemBody.problemId = calculateProblemHash(
+                    updatedProblemBody.problemId = hash.calculateProblemHash(
                         platform,
                         platformProblemId
                     );

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { problemSetDBInteractions } from "../database/interactions/problemSet";
 import { problemDBInteractions } from "../database/interactions/problem";
-import { ProblemSet, IProblemSetModel } from "../database/models/problemSet";
+import { IProblemSetModel } from "../database/models/problemSet";
 import { IProblemSet } from "../interfaces/IProblemSet";
 import { IProblem } from "../interfaces/IProblem";
 import { validationResult } from "express-validator/check";
@@ -47,6 +47,13 @@ const problemSetController = {
                     problemSetId
                 );
 
+                if (!problemSet) {
+                    return res.status(statusCodes.NOT_FOUND).json({
+                        status: statusCodes.NOT_FOUND,
+                        message: "ProblemSet not found"
+                    });
+                }
+
                 // TODO: find a non-hacky way to include IProblem[] array optionally into response with interface
                 const result: any = problemSet["_doc"];
                 if (req.query.includeProblems == "true") {
@@ -55,13 +62,7 @@ const problemSetController = {
                     );
                     result.problems = problems;
                 }
-
-                problemSet
-                    ? res.status(statusCodes.SUCCESS).json(result)
-                    : res.status(statusCodes.NOT_FOUND).json({
-                          status: statusCodes.NOT_FOUND,
-                          message: "ProblemSet not found"
-                      });
+                res.status(statusCodes.SUCCESS).json(result);
             } catch (error) {
                 res.status(statusCodes.SERVER_ERROR).json(error);
             }
@@ -79,10 +80,9 @@ const problemSetController = {
                 const problemSetData: IProblemSet = {
                     ...req.body
                 };
-                let newProblemSet: IProblemSetModel = await problemSetDBInteractions.create(
-                    new ProblemSet(problemSetData)
+                const newProblemSet: IProblemSetModel = await problemSetDBInteractions.create(
+                    problemSetData
                 );
-                newProblemSet = newProblemSet.toJSON();
                 res.status(statusCodes.SUCCESS).json(newProblemSet);
             } catch (error) {
                 res.status(statusCodes.SERVER_ERROR).json(error);
