@@ -148,6 +148,7 @@ const problemController = {
                     if (platform == "CODEFORCES") {
                         platformProblemId = platformProblemId.toUpperCase();
                     }
+
                     updatedProblemBody.problemId = hash.calculateProblemHash(
                         platform,
                         platformProblemId
