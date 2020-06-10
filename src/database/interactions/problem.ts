@@ -1,6 +1,6 @@
 import { IProblem } from "../../interfaces/IProblem";
 import { Problem, IProblemModel } from "../models/problem";
-import { calculateProblemHash } from "../../util/hash";
+import { hash } from "../../util/hash";
 
 export const problemDBInteractions = {
 
@@ -25,8 +25,8 @@ export const problemDBInteractions = {
     },
 
     findByProblemNumberAndPlatform: (problemNumber: string, platform: string): Promise<IProblemModel> => {
-        const hash = calculateProblemHash(problemNumber, platform);
-        return Problem.findOne({ problemId: hash }).exec();
+        const problemHash = hash.calculateProblemHash(problemNumber, platform);
+        return Problem.findOne({ problemId: problemHash }).exec();
     },
 
     findByGeneratedId: (generatedProblemId: string): Promise<IProblemModel> => {
