@@ -1,4 +1,4 @@
-import sinon from "sinon"
+import sinon from "sinon";
 import { hash } from "../../util/hash";
 
 export const problemUtilStubs = () => {
@@ -10,5 +10,5 @@ export const problemUtilStubs = () => {
         restore() {
             this.hash.calculateProblemHash.restore();
         }
-    }
-}
+    };
+};

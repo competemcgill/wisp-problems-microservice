@@ -3,7 +3,7 @@ import { problemController } from "../../../src/controllers/problem";
 import { problemDBInteractionsStubs } from "../stubs/problem";
 import { problemSetDBInteractionsStubs } from "../stubs/problemSet";
 import { mockReq, mockRes } from "sinon-express-mock";
-import { validatorStubs} from "../stubs/validator"
+import { validatorStubs } from "../stubs/validator";
 import { testProblemModel1 } from "../../util/sampleData";
 
 // Initialized outside of "describe" blocks to ensure typesafety + intellisense
@@ -13,9 +13,9 @@ let stubs = {
     validators: validatorStubs()
 };
 
-stubs.problemDB.restore()
-stubs.problemSetDB.restore()
-stubs.validators.restore()
+stubs.problemDB.restore();
+stubs.problemSetDB.restore();
+stubs.validators.restore();
 
 describe("Problems controller tests", () => {
     before(() => {
@@ -23,7 +23,7 @@ describe("Problems controller tests", () => {
             problemDB: problemDBInteractionsStubs(),
             problemSetDB: problemSetDBInteractionsStubs(),
             validators: validatorStubs()
-        }
+        };
     });
 
     beforeEach(() => {

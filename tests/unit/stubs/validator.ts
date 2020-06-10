@@ -1,4 +1,4 @@
-import sinon from "sinon"
+import sinon from "sinon";
 import check from "express-validator/check";
 
 export const validatorStubs = () => {
@@ -16,11 +16,13 @@ export const emptyValidationError = () => {
         isEmpty() {
             return true;
         }
-
-    }
+    };
 };
 
-export const validationErrorWithMessage = (errorMsg: { status: number; message: string }) => {
+export const validationErrorWithMessage = (errorMsg: {
+    status: number;
+    message: string;
+}) => {
     return {
         isEmpty() {
             return false;
@@ -33,4 +35,4 @@ export const validationErrorWithMessage = (errorMsg: { status: number; message: 
             };
         }
     };
-}
+};
