@@ -1,7 +1,11 @@
 import { IProblemSetModel } from "../../src/database/models/problemSet";
 import { IProblemSet } from "../../src/interfaces/IProblemSet";
 import { IProblemModel } from "../../src/database/models/problem";
-import { IProblem, PlatformName, Difficulty } from "../../src/interfaces/IProblem";
+import {
+    IProblem,
+    PlatformName,
+    Difficulty
+} from "../../src/interfaces/IProblem";
 
 export const testProblem1: IProblem = {
     title: "Test Problem 1",
@@ -41,8 +45,6 @@ export const testProblem2: IProblem = {
     }
 };
 
-
-
 export const testProblemSet1: IProblemSet = {
     title: "Test Problem Set 1",
     description: "Test problem set 1 description.",
@@ -55,7 +57,7 @@ export const testProblemSet2: IProblemSet = {
     description: "Test problem set 2 description.",
     tags: ["Graph Theory", "Test"],
     problemCount: 1
-}
+};
 
 export const testProblemSetModel1 = <IProblemSetModel>{
     _id: "exampleProblemSetMongoId1",
@@ -64,7 +66,7 @@ export const testProblemSetModel1 = <IProblemSetModel>{
     tags: ["Dynamic programming", "Test"],
     problemCount: 1,
     __v: 0
-}
+};
 
 export const testProblemSetModel1Doc: any = {
     _id: "exampleProblemSetMongoId1",
@@ -81,7 +83,7 @@ export const testProblemSetModel1Doc: any = {
         problemCount: 1,
         __v: 0
     }
-}
+};
 
 export const testProblemSetModel1IncludeProblems = {
     _id: "exampleProblemSetMongoId1",
@@ -91,7 +93,7 @@ export const testProblemSetModel1IncludeProblems = {
     problemCount: 1,
     __v: 0,
     problems: [testProblemModel1]
-}
+};
 
 export const testProblemSetModel2 = <IProblemSetModel>{
     _id: "exampleProblemSetMongoId2",
@@ -100,4 +102,4 @@ export const testProblemSetModel2 = <IProblemSetModel>{
     tags: ["Graph Theory", "Test"],
     problemCount: 1,
     __v: 0
-}
+};

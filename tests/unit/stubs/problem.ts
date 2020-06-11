@@ -6,10 +6,19 @@ export const problemDBInteractionsStubs = () => {
         create: sinon.stub(problemDBInteractions, "create"),
         all: sinon.stub(problemDBInteractions, "all"),
         find: sinon.stub(problemDBInteractions, "find"),
-        countInProblemSet: sinon.stub(problemDBInteractions, "countInProblemSet"),
+        countInProblemSet: sinon.stub(
+            problemDBInteractions,
+            "countInProblemSet"
+        ),
         listByProblemSet: sinon.stub(problemDBInteractions, "listByProblemSet"),
-        findByProblemNumberAndPlatform: sinon.stub(problemDBInteractions, "findByProblemNumberAndPlatform"),
-        findByGeneratedId: sinon.stub(problemDBInteractions, "findByGeneratedId"),
+        findByProblemNumberAndPlatform: sinon.stub(
+            problemDBInteractions,
+            "findByProblemNumberAndPlatform"
+        ),
+        findByGeneratedId: sinon.stub(
+            problemDBInteractions,
+            "findByGeneratedId"
+        ),
         update: sinon.stub(problemDBInteractions, "update"),
         delete: sinon.stub(problemDBInteractions, "delete"),
 
