@@ -1,19 +1,22 @@
 export enum PlatformName {
-    CODEFORCES, OTHER
+    CODEFORCES,
+    OTHER
 }
 
 export enum Difficulty {
-    easy, medium, hard
+    easy,
+    medium,
+    hard
 }
 
 export interface IProblem {
     title: string;
-    source: PlatformName;
+    source: string;
     problemId: string;
     sourceLink: string;
     problemSetIds: string[];
     problemMetadata: {
         platformProblemId: string;
-        difficulty: Difficulty;
-    }
+        difficulty: string;
+    };
 }

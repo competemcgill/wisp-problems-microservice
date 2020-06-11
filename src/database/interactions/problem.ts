@@ -1,9 +1,8 @@
 import { IProblem } from "../../interfaces/IProblem";
 import { Problem, IProblemModel } from "../models/problem";
-import { calculateProblemHash } from "../../util/hash"
+import { hash } from "../../util/hash";
 
 export const problemDBInteractions = {
-
     create: (problem: IProblem): Promise<IProblemModel> => {
         return Problem.create(problem);
     },
@@ -24,20 +23,28 @@ export const problemDBInteractions = {
         return Problem.find({ problemSetIds: problemSetIds }).exec();
     },
 
-    findByProblemNumberAndPlatform: (problemNumber: string, platform: string): Promise<IProblemModel> => {
-        const hash = calculateProblemHash(problemNumber, platform)
-        return Problem.findOne({ problemId: hash }).exec();
+    findByProblemNumberAndPlatform: (
+        problemNumber: string,
+        platform: string
+    ): Promise<IProblemModel> => {
+        const problemHash = hash.calculateProblemHash(problemNumber, platform);
+        return Problem.findOne({ problemId: problemHash }).exec();
     },
 
     findByGeneratedId: (generatedProblemId: string): Promise<IProblemModel> => {
         return Problem.findOne({ problemId: generatedProblemId }).exec();
     },
 
-    update: (problemId: string, newProblem: IProblem): Promise<IProblemModel> => {
-        return Problem.findByIdAndUpdate(problemId, newProblem, { new: true }).exec();
+    update: (
+        problemId: string,
+        newProblem: IProblem
+    ): Promise<IProblemModel> => {
+        return Problem.findByIdAndUpdate(problemId, newProblem, {
+            new: true
+        }).exec();
     },
 
     delete: (problemId: string): Promise<IProblemModel> => {
         return Problem.findByIdAndDelete(problemId).exec();
-    },
+    }
 };

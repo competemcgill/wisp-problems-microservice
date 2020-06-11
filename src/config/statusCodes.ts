@@ -5,4 +5,4 @@ export const statusCodes = {
     NOT_FOUND: 404,
     MISSING_PARAMS: 422,
     SERVER_ERROR: 500
-}
+};
