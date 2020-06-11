@@ -1,5 +1,5 @@
 import sinon from "sinon";
-import { hash } from "../../util/hash";
+import { hash } from "../../../src/util/hash";
 
 export const problemUtilStubs = () => {
     return {

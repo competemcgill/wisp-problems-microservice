@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { problemDBInteractions } from "../database/interactions/problem";
-import { Problem, IProblemModel } from "../database/models/problem";
+import { IProblemModel } from "../database/models/problem";
 import { IProblem } from "../interfaces/IProblem";
 import { validationResult } from "express-validator/check";
 import { errorMessage } from "../config/errorFormatter";
@@ -95,22 +95,12 @@ const problemController = {
                     )
                 };
 
-                let newProblem: IProblemModel = await problemDBInteractions.create(
-                    new Problem(problemData)
+                const newProblem: IProblemModel = await problemDBInteractions.create(
+                    problemData
                 );
 
-                for (const problemSetId of newProblem.problemSetIds) {
-                    const problemCount: number = await problemDBInteractions.countInProblemSet(
-                        problemSetId
-                    );
-                    const currProblemSet: IProblemSetModel = await problemSetDBInteractions.find(
-                        problemSetId
-                    );
-                    currProblemSet.problemCount = problemCount;
-                    await currProblemSet.save();
-                }
+                await problemSetDBInteractions.updateProblemCount(newProblem);
 
-                newProblem = newProblem.toJSON();
                 res.status(statusCodes.SUCCESS).json(newProblem);
             } catch (error) {
                 res.status(statusCodes.SERVER_ERROR).json(error);
@@ -154,21 +144,15 @@ const problemController = {
                         platformProblemId
                     );
 
-                    for (const problemSetId of problem.problemSetIds) {
-                        const problemCount: number = await problemDBInteractions.countInProblemSet(
-                            problemSetId
-                        );
-                        const currProblemSet: IProblemSetModel = await problemSetDBInteractions.find(
-                            problemSetId
-                        );
-                        currProblemSet.problemCount = problemCount;
-                        await currProblemSet.save();
-                    }
-
                     const updatedProblem: IProblemModel = await problemDBInteractions.update(
                         problemId,
                         updatedProblemBody
                     );
+
+                    await problemSetDBInteractions.updateProblemCount(
+                        updatedProblem
+                    );
+
                     res.status(statusCodes.SUCCESS).json(updatedProblem);
                 }
             } catch (error) {
@@ -177,6 +161,7 @@ const problemController = {
         }
     },
 
+    // THROWS ERROR?
     delete: async (req: Request, res: Response) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {

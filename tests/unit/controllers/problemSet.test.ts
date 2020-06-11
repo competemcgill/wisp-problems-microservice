@@ -162,7 +162,7 @@ describe("Problem sets controller tests", () => {
             );
         });
 
-        it("status 404: returns an appropriate response if user doesn't exist", async () => {
+        it("status 404: returns an appropriate response if problem set doesn't exist", async () => {
             stubs.problemSetDB.find.resolves(null);
             stubs.validators.validationResult.returns(
                 <any>emptyValidationError()
@@ -366,7 +366,7 @@ describe("Problem sets controller tests", () => {
             sinon.assert.calledWith(mockRes.json, updatedUser);
         });
 
-        it("status 404: returns an appropriate response if user doesn't exist", async () => {
+        it("status 404: returns an appropriate response if problem set doesn't exist", async () => {
             stubs.problemSetDB.find.resolves(null);
             stubs.validators.validationResult.returns(
                 <any>emptyValidationError()
@@ -451,7 +451,7 @@ describe("Problem sets controller tests", () => {
             sinon.assert.calledWith(mockRes.json);
         });
 
-        it("status 404: returns an appropriate response if user doesn't exist", async () => {
+        it("status 404: returns an appropriate response if problem set doesn't exist", async () => {
             stubs.validators.validationResult.returns(
                 <any>emptyValidationError()
             );

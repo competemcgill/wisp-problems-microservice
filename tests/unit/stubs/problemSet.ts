@@ -7,6 +7,10 @@ export const problemSetDBInteractionsStubs = () => {
         all: sinon.stub(problemSetDBInteractions, "all"),
         find: sinon.stub(problemSetDBInteractions, "find"),
         update: sinon.stub(problemSetDBInteractions, "update"),
+        updateProblemCount: sinon.stub(
+            problemSetDBInteractions,
+            "updateProblemCount"
+        ),
         delete: sinon.stub(problemSetDBInteractions, "delete"),
 
         restore() {
@@ -14,6 +18,7 @@ export const problemSetDBInteractionsStubs = () => {
             this.all.restore();
             this.find.restore();
             this.update.restore();
+            this.updateProblemCount.restore();
             this.delete.restore();
         }
     };

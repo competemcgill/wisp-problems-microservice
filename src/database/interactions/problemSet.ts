@@ -1,5 +1,7 @@
 import { IProblemSet } from "../../interfaces/IProblemSet";
 import { ProblemSet, IProblemSetModel } from "../models/problemSet";
+import { IProblemModel } from "../models/problem";
+import { problemUtil } from "../../util/problem";
 
 export const problemSetDBInteractions = {
     create: (problemSet: IProblemSet): Promise<IProblemSetModel> => {
@@ -12,6 +14,10 @@ export const problemSetDBInteractions = {
 
     find: (problemSetId: string): Promise<IProblemSetModel> => {
         return ProblemSet.findOne({ _id: problemSetId }).exec();
+    },
+
+    updateProblemCount: async (problem: IProblemModel): Promise<void> => {
+        return problemUtil.updateProblemCount(problem);
     },
 
     update: (
