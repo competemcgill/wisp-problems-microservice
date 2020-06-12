@@ -7,7 +7,6 @@ import { errorMessage } from "../config/errorFormatter";
 import { statusCodes } from "../config/statusCodes";
 import { hash } from "../util/hash";
 import { problemSetDBInteractions } from "../database/interactions/problemSet";
-import { IProblemSetModel } from "../database/models/problemSet";
 
 const problemController = {
     index: async (req: Request, res: Response) => {
@@ -181,16 +180,7 @@ const problemController = {
                     });
                 } else {
                     await problemDBInteractions.delete(problemId);
-                    for (const problemSetId of problem.problemSetIds) {
-                        const problemCount: number = await problemDBInteractions.countInProblemSet(
-                            problemSetId
-                        );
-                        const currProblemSet: IProblemSetModel = await problemSetDBInteractions.find(
-                            problemSetId
-                        );
-                        currProblemSet.problemCount = problemCount;
-                        await currProblemSet.save();
-                    }
+                    await problemSetDBInteractions.updateProblemCount(problem);
                     res.status(statusCodes.SUCCESS).json();
                 }
             } catch (error) {
