@@ -86,7 +86,8 @@ const problemSetController = {
         } else {
             try {
                 const problemSetData: IProblemSet = {
-                    ...req.body
+                    ...req.body,
+                    problemCount: 0
                 };
 
                 const newProblemSet: IProblemSetModel = await problemSetDBInteractions.create(
@@ -118,7 +119,8 @@ const problemSetController = {
                     });
                 else {
                     const updatedProblemSetBody: IProblemSet = {
-                        ...req.body
+                        ...req.body,
+                        problemCount: problemSet.problemCount
                     };
 
                     const updatedProblemSet: IProblemSetModel = await problemSetDBInteractions.update(

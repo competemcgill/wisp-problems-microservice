@@ -232,7 +232,10 @@ describe("Problem sets controller tests", () => {
             );
             await problemSetController.create(req, mockRes);
             sinon.assert.calledOnce(stubs.problemSetDB.create);
-            sinon.assert.calledWith(stubs.problemSetDB.create, req.body);
+            sinon.assert.calledWith(stubs.problemSetDB.create, {
+                ...req.body,
+                problemCount: 0
+            });
             sinon.assert.calledWith(mockRes.status, statusCodes.SUCCESS);
             sinon.assert.calledWith(mockRes.json, testProblemSetModel1);
         });
@@ -259,7 +262,10 @@ describe("Problem sets controller tests", () => {
             );
             await problemSetController.create(req, mockRes);
             sinon.assert.calledOnce(stubs.problemSetDB.create);
-            sinon.assert.calledWith(stubs.problemSetDB.create, req.body);
+            sinon.assert.calledWith(stubs.problemSetDB.create, {
+                ...req.body,
+                problemCount: 0
+            });
             sinon.assert.calledWith(mockRes.status, statusCodes.SERVER_ERROR);
         });
     });
@@ -301,6 +307,36 @@ describe("Problem sets controller tests", () => {
                 stubs.problemSetDB.update,
                 req.params.problemSetId,
                 req.body
+            );
+            sinon.assert.calledWith(mockRes.status, statusCodes.SUCCESS);
+            sinon.assert.calledWith(mockRes.json, updatedUser);
+        });
+
+        it("status 200: returns successfully unchanged problemCount", async () => {
+            stubs.validators.validationResult.returns(
+                <any>emptyValidationError()
+            );
+            stubs.problemSetDB.find.resolves(testProblemSetModel1);
+
+            const updatedUser = JSON.parse(JSON.stringify(testProblemSet1));
+            updatedUser._id = req.params.problemSetId;
+            updatedUser.title = "Test Problem Set Title 1 Updated";
+            updatedUser.problemCount = 9;
+            stubs.problemSetDB.update.resolves(updatedUser);
+
+            req.body.title = "Test Problem Set Title 1 Updated";
+            await problemSetController.update(req, mockRes);
+
+            sinon.assert.calledOnce(stubs.problemSetDB.find);
+            sinon.assert.calledOnce(stubs.problemSetDB.update);
+            sinon.assert.calledWith(
+                stubs.problemSetDB.find,
+                req.params.problemSetId
+            );
+            sinon.assert.calledWith(
+                stubs.problemSetDB.update,
+                req.params.problemSetId,
+                { ...req.body, problemCount: testProblemSet1.problemCount }
             );
             sinon.assert.calledWith(mockRes.status, statusCodes.SUCCESS);
             sinon.assert.calledWith(mockRes.json, updatedUser);
