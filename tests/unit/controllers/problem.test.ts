@@ -17,6 +17,7 @@ import {
 import { statusCodes } from "../../../src/config/statusCodes";
 import { problemUtilStubs } from "../stubs/util";
 import { IProblem } from "interfaces/IProblem";
+import { IProblemModel } from "database/models/problem";
 
 // Initialized outside of "describe" blocks to ensure typesafety + intellisense
 let stubs = {
@@ -364,6 +365,165 @@ describe("Problems controller tests", () => {
         beforeEach(() => {
             req = mockReq({});
         });
+
+        it("status 200: returns successfully an updated problem with no linked problem sets", async () => {
+            req.params.problemId = testProblemModel2._id;
+            req.body = {
+                ...testProblem2
+            };
+            req.body.title = "Updated title";
+            const problemToUpdate: IProblem = {
+                ...req.body,
+                problemId: testProblemModel2.problemId
+            };
+            const problemModelToUpdate = <IProblemModel>{
+                ...problemToUpdate,
+                _id: testProblemModel2._id,
+                __v: testProblemModel2.__v
+            };
+
+            stubs.problemDB.find.resolves(testProblemModel2);
+            stubs.problemDB.update.resolves(problemModelToUpdate);
+            stubs.problemSetDB.updateProblemCount.resolves(null);
+            stubs.problemUtil.hash.calculateProblemHash.returns(
+                testProblemModel2.problemId
+            );
+            stubs.validators.validationResult.returns(
+                <any>emptyValidationError()
+            );
+
+            await problemController.update(req, mockRes);
+
+            sinon.assert.calledOnce(stubs.problemDB.update);
+            sinon.assert.calledOnce(
+                stubs.problemUtil.hash.calculateProblemHash
+            );
+            sinon.assert.calledOnce(stubs.problemSetDB.updateProblemCount);
+            sinon.assert.calledWith(
+                stubs.problemUtil.hash.calculateProblemHash,
+                testProblem2.source,
+                testProblem2.problemMetadata.platformProblemId
+            );
+
+            sinon.assert.calledWith(
+                stubs.problemDB.update,
+                req.params.problemId,
+                problemToUpdate
+            );
+            sinon.assert.calledWith(
+                stubs.problemSetDB.updateProblemCount,
+                problemModelToUpdate
+            );
+            sinon.assert.calledWith(mockRes.status, statusCodes.SUCCESS);
+            sinon.assert.calledWith(mockRes.json, problemModelToUpdate);
+        });
+
+        it("status 200: returns successfully an updated problem with a linked problem set", async () => {
+            req.params.problemId = testProblemModel1._id;
+            req.body = {
+                ...testProblem1
+            };
+            req.body.title = "Updated title";
+            const problemToUpdate: IProblem = {
+                ...req.body,
+                problemId: testProblemModel1.problemId
+            };
+            const problemModelToUpdate = <IProblemModel>{
+                ...problemToUpdate,
+                _id: testProblemModel1._id,
+                __v: testProblemModel1.__v
+            };
+
+            stubs.problemDB.find.resolves(testProblemModel1);
+            stubs.problemDB.update.resolves(problemModelToUpdate);
+            stubs.problemSetDB.updateProblemCount.resolves(null);
+            stubs.problemUtil.hash.calculateProblemHash.returns(
+                testProblemModel1.problemId
+            );
+            stubs.validators.validationResult.returns(
+                <any>emptyValidationError()
+            );
+
+            await problemController.update(req, mockRes);
+
+            sinon.assert.calledOnce(stubs.problemDB.update);
+            sinon.assert.calledOnce(
+                stubs.problemUtil.hash.calculateProblemHash
+            );
+            sinon.assert.calledOnce(stubs.problemSetDB.updateProblemCount);
+            sinon.assert.calledWith(
+                stubs.problemUtil.hash.calculateProblemHash,
+                testProblem1.source,
+                testProblem1.problemMetadata.platformProblemId
+            );
+
+            sinon.assert.calledWith(
+                stubs.problemDB.update,
+                req.params.problemId,
+                problemToUpdate
+            );
+            sinon.assert.calledWith(
+                stubs.problemSetDB.updateProblemCount,
+                problemModelToUpdate
+            );
+            sinon.assert.calledWith(mockRes.status, statusCodes.SUCCESS);
+            sinon.assert.calledWith(mockRes.json, problemModelToUpdate);
+        });
+
+        // TODO: 200 when source link/platformProblemId is changed ("problemId" field will be calculated as something new)
+        // TODO: 200 when problemSetId is added to array
+
+        it("status 404: returns an appropriate response if problem doesn't exist", async () => {
+            stubs.problemDB.find.resolves(null);
+            stubs.validators.validationResult.returns(
+                <any>emptyValidationError()
+            );
+
+            req.params.problemId = "nonexistantId";
+
+            await problemController.update(req, mockRes);
+
+            sinon.assert.calledOnce(stubs.problemDB.find);
+            sinon.assert.notCalled(stubs.problemUtil.hash.calculateProblemHash);
+            sinon.assert.notCalled(stubs.problemDB.update);
+            sinon.assert.notCalled(stubs.problemSetDB.updateProblemCount);
+
+            sinon.assert.calledWith(stubs.problemDB.find, req.params.problemId);
+            sinon.assert.calledWith(mockRes.status, statusCodes.NOT_FOUND);
+            sinon.assert.calledWith(mockRes.json, {
+                status: statusCodes.NOT_FOUND,
+                message: "Problem not found"
+            });
+        });
+
+        it("status 422: returns an appropriate response with validation error", async () => {
+            const errorMsg = {
+                status: statusCodes.MISSING_PARAMS,
+                message: "body[title]: Invalid or missing 'title'"
+            };
+            stubs.validators.validationResult.returns(
+                <any>validationErrorWithMessage(errorMsg)
+            );
+            await problemController.update(req, mockRes);
+            sinon.assert.calledOnce(stubs.validators.validationResult);
+            sinon.assert.notCalled(stubs.problemDB.find);
+            sinon.assert.notCalled(stubs.problemDB.update);
+            sinon.assert.calledWith(mockRes.status, statusCodes.MISSING_PARAMS);
+            sinon.assert.calledWith(mockRes.json, errorMsg);
+        });
+
+        it("status 500: returns server error if server fails", async () => {
+            stubs.problemDB.find.throws();
+            stubs.validators.validationResult.returns(
+                <any>emptyValidationError()
+            );
+            req.params.problemId = "someProblemId"
+
+            await problemController.update(req, mockRes);
+            sinon.assert.calledOnce(stubs.problemDB.find);
+            sinon.assert.calledWith(stubs.problemDB.find, req.params.problemId);
+            sinon.assert.calledWith(mockRes.status, statusCodes.SERVER_ERROR);
+        });
     });
 
     describe("Delete", () => {
@@ -429,8 +589,7 @@ describe("Problems controller tests", () => {
         it("status 422: returns an appropriate response with validation error", async () => {
             const errorMsg = {
                 status: statusCodes.MISSING_PARAMS,
-                message:
-                    "params[problemId]: Invalid or missing 'problemId'"
+                message: "params[problemId]: Invalid or missing 'problemId'"
             };
             stubs.validators.validationResult.returns(
                 <any>validationErrorWithMessage(errorMsg)
@@ -452,10 +611,7 @@ describe("Problems controller tests", () => {
 
             await problemController.delete(req, mockRes);
             sinon.assert.calledOnce(stubs.problemDB.find);
-            sinon.assert.calledWith(
-                stubs.problemDB.find,
-                req.params.problemId
-            );
+            sinon.assert.calledWith(stubs.problemDB.find, req.params.problemId);
             sinon.assert.calledWith(mockRes.status, statusCodes.SERVER_ERROR);
         });
     });

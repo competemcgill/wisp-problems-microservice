@@ -160,7 +160,6 @@ const problemController = {
         }
     },
 
-    // THROWS ERROR?
     delete: async (req: Request, res: Response) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
