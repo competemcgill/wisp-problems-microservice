@@ -13,7 +13,7 @@ export const problemUtil = {
                 problemSetId
             );
             currProblemSet.problemCount = problemCount;
-            await currProblemSet.save();
+            await problemSetDBInteractions.update(problemSetId, currProblemSet);
         }
     }
 };

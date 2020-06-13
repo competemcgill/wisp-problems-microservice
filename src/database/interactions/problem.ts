@@ -44,6 +44,16 @@ export const problemDBInteractions = {
         }).exec();
     },
 
+    removeProblemSetId: (problemSetId: string): Promise<void> => {
+        return Problem.update(
+            { problemSetIds: problemSetId },
+            {
+                $pull: { problemSetIds: { $in: [problemSetId] } }
+            },
+            { multi: true }
+        ).exec();
+    },
+
     delete: (problemId: string): Promise<IProblemModel> => {
         return Problem.findByIdAndDelete(problemId).exec();
     }

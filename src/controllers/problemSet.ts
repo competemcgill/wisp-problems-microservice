@@ -145,6 +145,9 @@ const problemSetController = {
                     });
                 } else {
                     await problemSetDBInteractions.delete(problemSetId);
+                    await problemDBInteractions.removeProblemSetId(
+                        problemSetId
+                    );
                     res.status(statusCodes.SUCCESS).json();
                 }
             } catch (error) {

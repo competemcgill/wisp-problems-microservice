@@ -1,14 +1,15 @@
 import sinon from "sinon";
 import { hash } from "../../../src/util/hash";
+import { problemUtil } from "../../../src/util/problem";
 
 export const problemUtilStubs = () => {
     return {
-        hash: {
-            calculateProblemHash: sinon.stub(hash, "calculateProblemHash")
-        },
+        calculateProblemHash: sinon.stub(hash, "calculateProblemHash"),
+        updateProblemCount: sinon.stub(problemUtil, "updateProblemCount"),
 
         restore() {
-            this.hash.calculateProblemHash.restore();
+            this.calculateProblemHash.restore();
+            this.updateProblemCount.restore();
         }
     };
 };

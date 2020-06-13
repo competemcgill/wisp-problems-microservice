@@ -241,7 +241,7 @@ describe("Problems controller tests", () => {
         it("status 200: returns successfully a created problem with no linked problem sets", async () => {
             stubs.problemDB.create.resolves(testProblemModel2);
             stubs.problemSetDB.updateProblemCount.resolves(null);
-            stubs.problemUtil.hash.calculateProblemHash.returns(
+            stubs.problemUtil.calculateProblemHash.returns(
                 testProblemModel2.problemId
             );
             stubs.validators.validationResult.returns(
@@ -253,12 +253,10 @@ describe("Problems controller tests", () => {
             };
             await problemController.create(req, mockRes);
             sinon.assert.calledOnce(stubs.problemDB.create);
-            sinon.assert.calledOnce(
-                stubs.problemUtil.hash.calculateProblemHash
-            );
+            sinon.assert.calledOnce(stubs.problemUtil.calculateProblemHash);
             sinon.assert.calledOnce(stubs.problemSetDB.updateProblemCount);
             sinon.assert.calledWith(
-                stubs.problemUtil.hash.calculateProblemHash,
+                stubs.problemUtil.calculateProblemHash,
                 testProblem2.source,
                 testProblem2.problemMetadata.platformProblemId
             );
@@ -278,7 +276,7 @@ describe("Problems controller tests", () => {
         it("status 200: returns successfully a created problem with linked problem sets", async () => {
             stubs.problemDB.create.resolves(testProblemModel1);
             stubs.problemSetDB.updateProblemCount.resolves(null);
-            stubs.problemUtil.hash.calculateProblemHash.returns(
+            stubs.problemUtil.calculateProblemHash.returns(
                 testProblemModel1.problemId
             );
 
@@ -291,13 +289,11 @@ describe("Problems controller tests", () => {
             };
             await problemController.create(req, mockRes);
             sinon.assert.calledOnce(stubs.problemDB.create);
-            sinon.assert.calledOnce(
-                stubs.problemUtil.hash.calculateProblemHash
-            );
+            sinon.assert.calledOnce(stubs.problemUtil.calculateProblemHash);
             sinon.assert.calledOnce(stubs.problemSetDB.updateProblemCount);
 
             sinon.assert.calledWith(
-                stubs.problemUtil.hash.calculateProblemHash,
+                stubs.problemUtil.calculateProblemHash,
                 testProblem1.source,
                 testProblem1.problemMetadata.platformProblemId
             );
@@ -331,7 +327,7 @@ describe("Problems controller tests", () => {
 
         it("status 500: returns server error if server fails", async () => {
             stubs.problemDB.create.throws();
-            stubs.problemUtil.hash.calculateProblemHash.returns(
+            stubs.problemUtil.calculateProblemHash.returns(
                 testProblemModel1.problemId
             );
             stubs.validators.validationResult.returns(
@@ -342,12 +338,10 @@ describe("Problems controller tests", () => {
             };
             await problemController.create(req, mockRes);
             sinon.assert.calledOnce(stubs.problemDB.create);
-            sinon.assert.calledOnce(
-                stubs.problemUtil.hash.calculateProblemHash
-            );
+            sinon.assert.calledOnce(stubs.problemUtil.calculateProblemHash);
 
             sinon.assert.calledWith(
-                stubs.problemUtil.hash.calculateProblemHash,
+                stubs.problemUtil.calculateProblemHash,
                 testProblem1.source,
                 testProblem1.problemMetadata.platformProblemId
             );
@@ -385,7 +379,7 @@ describe("Problems controller tests", () => {
             stubs.problemDB.find.resolves(testProblemModel2);
             stubs.problemDB.update.resolves(problemModelToUpdate);
             stubs.problemSetDB.updateProblemCount.resolves(null);
-            stubs.problemUtil.hash.calculateProblemHash.returns(
+            stubs.problemUtil.calculateProblemHash.returns(
                 testProblemModel2.problemId
             );
             stubs.validators.validationResult.returns(
@@ -395,12 +389,10 @@ describe("Problems controller tests", () => {
             await problemController.update(req, mockRes);
 
             sinon.assert.calledOnce(stubs.problemDB.update);
-            sinon.assert.calledOnce(
-                stubs.problemUtil.hash.calculateProblemHash
-            );
+            sinon.assert.calledOnce(stubs.problemUtil.calculateProblemHash);
             sinon.assert.calledOnce(stubs.problemSetDB.updateProblemCount);
             sinon.assert.calledWith(
-                stubs.problemUtil.hash.calculateProblemHash,
+                stubs.problemUtil.calculateProblemHash,
                 testProblem2.source,
                 testProblem2.problemMetadata.platformProblemId
             );
@@ -437,7 +429,7 @@ describe("Problems controller tests", () => {
             stubs.problemDB.find.resolves(testProblemModel1);
             stubs.problemDB.update.resolves(problemModelToUpdate);
             stubs.problemSetDB.updateProblemCount.resolves(null);
-            stubs.problemUtil.hash.calculateProblemHash.returns(
+            stubs.problemUtil.calculateProblemHash.returns(
                 testProblemModel1.problemId
             );
             stubs.validators.validationResult.returns(
@@ -447,12 +439,10 @@ describe("Problems controller tests", () => {
             await problemController.update(req, mockRes);
 
             sinon.assert.calledOnce(stubs.problemDB.update);
-            sinon.assert.calledOnce(
-                stubs.problemUtil.hash.calculateProblemHash
-            );
+            sinon.assert.calledOnce(stubs.problemUtil.calculateProblemHash);
             sinon.assert.calledOnce(stubs.problemSetDB.updateProblemCount);
             sinon.assert.calledWith(
-                stubs.problemUtil.hash.calculateProblemHash,
+                stubs.problemUtil.calculateProblemHash,
                 testProblem1.source,
                 testProblem1.problemMetadata.platformProblemId
             );
@@ -470,8 +460,59 @@ describe("Problems controller tests", () => {
             sinon.assert.calledWith(mockRes.json, problemModelToUpdate);
         });
 
-        // TODO: 200 when source link/platformProblemId is changed ("problemId" field will be calculated as something new)
-        // TODO: 200 when problemSetId is added to array
+        it("status 200: returns successfully an updated problem when source link + platformProblemId is changed", async () => {
+            req.params.problemId = testProblemModel1._id;
+            req.body = {
+                ...testProblem1
+            };
+
+            req.body.sourceLink = testProblemModel2.sourceLink;
+            req.body.problemMetadata.platformProblemId =
+                testProblemModel2.problemMetadata.platformProblemId;
+
+            const problemToUpdate: IProblem = {
+                ...req.body,
+                problemId: testProblemModel2.problemId
+            };
+            const problemModelToUpdate = <IProblemModel>{
+                ...problemToUpdate,
+                _id: testProblemModel1._id,
+                __v: testProblemModel1.__v
+            };
+
+            stubs.problemDB.find.resolves(testProblemModel1);
+            stubs.problemDB.update.resolves(problemModelToUpdate);
+            stubs.problemSetDB.updateProblemCount.resolves(null);
+            stubs.problemUtil.calculateProblemHash.returns(
+                testProblemModel2.problemId
+            );
+            stubs.validators.validationResult.returns(
+                <any>emptyValidationError()
+            );
+
+            await problemController.update(req, mockRes);
+
+            sinon.assert.calledOnce(stubs.problemDB.update);
+            sinon.assert.calledOnce(stubs.problemUtil.calculateProblemHash);
+            sinon.assert.calledOnce(stubs.problemSetDB.updateProblemCount);
+            sinon.assert.calledWith(
+                stubs.problemUtil.calculateProblemHash,
+                req.body.source,
+                req.body.problemMetadata.platformProblemId
+            );
+
+            sinon.assert.calledWith(
+                stubs.problemDB.update,
+                req.params.problemId,
+                problemToUpdate
+            );
+            sinon.assert.calledWith(
+                stubs.problemSetDB.updateProblemCount,
+                problemModelToUpdate
+            );
+            sinon.assert.calledWith(mockRes.status, statusCodes.SUCCESS);
+            sinon.assert.calledWith(mockRes.json, problemModelToUpdate);
+        });
 
         it("status 404: returns an appropriate response if problem doesn't exist", async () => {
             stubs.problemDB.find.resolves(null);
@@ -484,7 +525,7 @@ describe("Problems controller tests", () => {
             await problemController.update(req, mockRes);
 
             sinon.assert.calledOnce(stubs.problemDB.find);
-            sinon.assert.notCalled(stubs.problemUtil.hash.calculateProblemHash);
+            sinon.assert.notCalled(stubs.problemUtil.calculateProblemHash);
             sinon.assert.notCalled(stubs.problemDB.update);
             sinon.assert.notCalled(stubs.problemSetDB.updateProblemCount);
 
@@ -517,7 +558,7 @@ describe("Problems controller tests", () => {
             stubs.validators.validationResult.returns(
                 <any>emptyValidationError()
             );
-            req.params.problemId = "someProblemId"
+            req.params.problemId = "someProblemId";
 
             await problemController.update(req, mockRes);
             sinon.assert.calledOnce(stubs.problemDB.find);
