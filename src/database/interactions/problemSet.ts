@@ -20,6 +20,12 @@ export const problemSetDBInteractions = {
         return problemUtil.updateProblemCount(problem);
     },
 
+    setProblemCount: (problemSetId: string, problemCount: number) => {
+        return ProblemSet.findByIdAndUpdate(problemSetId, {
+            $set: { problemCount: problemCount }
+        });
+    },
+
     update: (
         problemSetId: string,
         newProblemSet: IProblemSet

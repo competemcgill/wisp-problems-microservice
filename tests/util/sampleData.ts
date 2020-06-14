@@ -7,11 +7,21 @@ import {
     Difficulty
 } from "../../src/interfaces/IProblem";
 
+/* 
+Format of test data:
+testProblemSet1 has a single problem: testProblem1
+testProblemSet2 is an empty problemSet
+testProblem2 belongs to no problemSet
+*/
+
+const ps1ID = "5ee55dfcdb2b0e001c9c35c1";
+const ps2ID = "5ee55dfcdb2b0e001c9c35c2";
+
 export const testProblem1 = <IProblem>{
     title: "Test Problem 1",
     source: PlatformName[0],
     sourceLink: "https://codeforces.com/problemset/problem/1/A",
-    problemSetIds: ["exampleProblemSetMongoId1"],
+    problemSetIds: [ps1ID],
     problemMetadata: {
         platformProblemId: "1A",
         difficulty: Difficulty[0]
@@ -24,7 +34,7 @@ export const testProblemModel1 = <IProblemModel>{
     problemId: "27796f7b6717753aeee14bb4ba2acf6f55c88956",
     source: PlatformName[0],
     sourceLink: "https://codeforces.com/problemset/problem/1/A",
-    problemSetIds: ["exampleProblemSetMongoId1"],
+    problemSetIds: [ps1ID],
     problemMetadata: {
         platformProblemId: "1A",
         difficulty: Difficulty[0]
@@ -72,7 +82,7 @@ export const testProblemSet2: IProblemSet = {
 };
 
 export const testProblemSetModel1 = <IProblemSetModel>{
-    _id: "exampleProblemSetMongoId1",
+    _id: ps1ID,
     title: "Test Problem Set 1",
     description: "Test problem set 1 description.",
     tags: ["Dynamic programming", "Test"],
@@ -81,14 +91,14 @@ export const testProblemSetModel1 = <IProblemSetModel>{
 };
 
 export const testProblemSetModel1Doc: any = {
-    _id: "exampleProblemSetMongoId1",
+    _id: ps1ID,
     title: "Test Problem Set 1",
     description: "Test problem set 1 description.",
     tags: ["Dynamic programming", "Test"],
     problemCount: 1,
     __v: 0,
     _doc: {
-        _id: "exampleProblemSetMongoId1",
+        _id: ps1ID,
         title: "Test Problem Set 1",
         description: "Test problem set 1 description.",
         tags: ["Dynamic programming", "Test"],
@@ -98,7 +108,7 @@ export const testProblemSetModel1Doc: any = {
 };
 
 export const testProblemSetModel1IncludeProblems = {
-    _id: "exampleProblemSetMongoId1",
+    _id: ps1ID,
     title: "Test Problem Set 1",
     description: "Test problem set 1 description.",
     tags: ["Dynamic programming", "Test"],
@@ -108,7 +118,7 @@ export const testProblemSetModel1IncludeProblems = {
 };
 
 export const testProblemSetModel2 = <IProblemSetModel>{
-    _id: "exampleProblemSetMongoId2",
+    _id: ps2ID,
     title: "Test Problem Set 2",
     description: "Test problem set 2 description.",
     tags: ["Graph Theory", "Test"],

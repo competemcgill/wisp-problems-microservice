@@ -124,7 +124,7 @@ describe("Problem sets controller tests", () => {
             stubs.validators.validationResult.returns(
                 <any>emptyValidationError()
             );
-            req.params.problemSetId = "exampleProblemSetMongoId1";
+            req.params.problemSetId = testProblemSetModel1._id;
             await problemSetController.show(req, mockRes);
             sinon.assert.calledOnce(stubs.problemSetDB.find);
             sinon.assert.notCalled(stubs.problemDB.listByProblemSet);
@@ -142,7 +142,7 @@ describe("Problem sets controller tests", () => {
             stubs.validators.validationResult.returns(
                 <any>emptyValidationError()
             );
-            req.params.problemSetId = "exampleProblemSetMongoId1";
+            req.params.problemSetId = testProblemSetModel1._id;
             req.query.includeProblems = "true";
             await problemSetController.show(req, mockRes);
             sinon.assert.calledOnce(stubs.problemSetDB.find);
@@ -434,11 +434,13 @@ describe("Problem sets controller tests", () => {
             );
             stubs.problemSetDB.find.resolves(testProblemSetModel1);
             stubs.problemSetDB.delete.resolves(testProblemSetModel1);
+            stubs.problemDB.removeProblemSetId.resolves(null);
 
             await problemSetController.delete(req, mockRes);
 
             sinon.assert.calledOnce(stubs.problemSetDB.find);
             sinon.assert.calledOnce(stubs.problemSetDB.delete);
+            sinon.assert.calledOnce(stubs.problemDB.removeProblemSetId);
             sinon.assert.calledWith(
                 stubs.problemSetDB.find,
                 req.params.problemSetId
@@ -446,6 +448,10 @@ describe("Problem sets controller tests", () => {
             sinon.assert.calledWith(
                 stubs.problemSetDB.delete,
                 req.params.problemSetId
+            );
+            sinon.assert.calledWith(
+                stubs.problemDB.removeProblemSetId,
+                testProblemSetModel1._id
             );
             sinon.assert.calledWith(mockRes.status, statusCodes.SUCCESS);
             sinon.assert.calledWith(mockRes.json);
@@ -457,11 +463,13 @@ describe("Problem sets controller tests", () => {
             );
             stubs.problemSetDB.find.resolves(null);
             stubs.problemSetDB.delete.resolves(null);
+            stubs.problemDB.removeProblemSetId.resolves(null);
 
             await problemSetController.delete(req, mockRes);
 
             sinon.assert.calledOnce(stubs.problemSetDB.find);
             sinon.assert.notCalled(stubs.problemSetDB.delete);
+            sinon.assert.notCalled(stubs.problemDB.removeProblemSetId);
             sinon.assert.calledWith(
                 stubs.problemSetDB.find,
                 req.params.problemSetId
@@ -484,12 +492,14 @@ describe("Problem sets controller tests", () => {
             );
             stubs.problemSetDB.find.resolves(null);
             stubs.problemSetDB.delete.resolves(null);
+            stubs.problemDB.removeProblemSetId.resolves(null);
 
             await problemSetController.delete(req, mockRes);
 
             sinon.assert.calledOnce(stubs.validators.validationResult);
             sinon.assert.notCalled(stubs.problemSetDB.find);
             sinon.assert.notCalled(stubs.problemSetDB.delete);
+            sinon.assert.notCalled(stubs.problemDB.removeProblemSetId);
             sinon.assert.calledWith(mockRes.status, statusCodes.MISSING_PARAMS);
             sinon.assert.calledWith(mockRes.json, errorMsg);
         });

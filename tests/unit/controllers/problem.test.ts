@@ -467,6 +467,9 @@ describe("Problems controller tests", () => {
             };
 
             req.body.sourceLink = testProblemModel2.sourceLink;
+            req.body.problemMetadata = {};
+            req.body.problemMetadata.difficulty =
+                testProblemModel2.problemMetadata.difficulty;
             req.body.problemMetadata.platformProblemId =
                 testProblemModel2.problemMetadata.platformProblemId;
 
