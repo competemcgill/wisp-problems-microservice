@@ -271,18 +271,16 @@ describe("Problems controller tests", () => {
         });
 
         it("status 200: returns successfully a created problem with no linked problem sets when source != CODEFORCES", async () => {
-            const probModel = <IProblemModel> {
+            const probModel = <IProblemModel>{
                 ...testProblemModel2
-            }
+            };
             const prob: IProblem = {
                 ...testProblem2
-            }
-            prob.source = PlatformName[1]
-            probModel.source = PlatformName[1]
+            };
+            prob.source = PlatformName[1];
+            probModel.source = PlatformName[1];
             stubs.problemDB.create.resolves(probModel);
-            stubs.problemUtil.calculateProblemHash.returns(
-                probModel.problemId
-            );
+            stubs.problemUtil.calculateProblemHash.returns(probModel.problemId);
             stubs.validators.validationResult.returns(
                 <any>emptyValidationError()
             );
@@ -448,14 +446,14 @@ describe("Problems controller tests", () => {
         });
 
         it("status 200: returns successfully an updated problem with no linked problem sets and source != CODEFORCES", async () => {
-            const probModel = <IProblemModel> {
+            const probModel = <IProblemModel>{
                 ...testProblemModel2
-            }
+            };
             const prob: IProblem = {
                 ...testProblem2
-            }
-            prob.source = PlatformName[1]
-            probModel.source = PlatformName[1]
+            };
+            prob.source = PlatformName[1];
+            probModel.source = PlatformName[1];
 
             req.params.problemId = probModel._id;
             req.body = {
@@ -474,9 +472,7 @@ describe("Problems controller tests", () => {
 
             stubs.problemDB.find.resolves(probModel);
             stubs.problemDB.update.resolves(problemModelToUpdate);
-            stubs.problemUtil.calculateProblemHash.returns(
-                probModel.problemId
-            );
+            stubs.problemUtil.calculateProblemHash.returns(probModel.problemId);
             stubs.validators.validationResult.returns(
                 <any>emptyValidationError()
             );
