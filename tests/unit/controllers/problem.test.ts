@@ -16,8 +16,8 @@ import {
 } from "../../util/sampleData";
 import { statusCodes } from "../../../src/config/statusCodes";
 import { problemUtilStubs } from "../stubs/util";
-import { IProblem } from "interfaces/IProblem";
-import { IProblemModel } from "database/models/problem";
+import { IProblem, PlatformName } from "../../../src/interfaces/IProblem";
+import { IProblemModel } from "../../../src/database/models/problem";
 
 // Initialized outside of "describe" blocks to ensure typesafety + intellisense
 let stubs = {
@@ -270,6 +270,48 @@ describe("Problems controller tests", () => {
             sinon.assert.calledWith(mockRes.json, testProblemModel2);
         });
 
+        it("status 200: returns successfully a created problem with no linked problem sets when source != CODEFORCES", async () => {
+            const probModel = <IProblemModel> {
+                ...testProblemModel2
+            }
+            const prob: IProblem = {
+                ...testProblem2
+            }
+            prob.source = PlatformName[1]
+            probModel.source = PlatformName[1]
+            stubs.problemDB.create.resolves(probModel);
+            stubs.problemUtil.calculateProblemHash.returns(
+                probModel.problemId
+            );
+            stubs.validators.validationResult.returns(
+                <any>emptyValidationError()
+            );
+
+            req.body = {
+                ...prob
+            };
+            await problemController.create(req, mockRes);
+            sinon.assert.calledOnce(stubs.problemDB.create);
+            sinon.assert.calledOnce(stubs.problemUtil.calculateProblemHash);
+            sinon.assert.calledOnce(stubs.problemSetDB.updateProblemCount);
+            sinon.assert.calledWith(
+                stubs.problemUtil.calculateProblemHash,
+                prob.source,
+                prob.problemMetadata.platformProblemId
+            );
+            const problemToCreate: IProblem = {
+                ...req.body,
+                problemId: probModel.problemId
+            };
+            sinon.assert.calledWith(stubs.problemDB.create, problemToCreate);
+            sinon.assert.calledWith(
+                stubs.problemSetDB.updateProblemCount,
+                probModel
+            );
+            sinon.assert.calledWith(mockRes.status, statusCodes.SUCCESS);
+            sinon.assert.calledWith(mockRes.json, probModel);
+        });
+
         it("status 200: returns successfully a created problem with linked problem sets", async () => {
             stubs.problemDB.create.resolves(testProblemModel1);
             stubs.problemUtil.calculateProblemHash.returns(
@@ -390,6 +432,64 @@ describe("Problems controller tests", () => {
                 stubs.problemUtil.calculateProblemHash,
                 testProblem2.source,
                 testProblem2.problemMetadata.platformProblemId
+            );
+
+            sinon.assert.calledWith(
+                stubs.problemDB.update,
+                req.params.problemId,
+                problemToUpdate
+            );
+            sinon.assert.calledWith(
+                stubs.problemSetDB.updateProblemCount,
+                problemModelToUpdate
+            );
+            sinon.assert.calledWith(mockRes.status, statusCodes.SUCCESS);
+            sinon.assert.calledWith(mockRes.json, problemModelToUpdate);
+        });
+
+        it("status 200: returns successfully an updated problem with no linked problem sets and source != CODEFORCES", async () => {
+            const probModel = <IProblemModel> {
+                ...testProblemModel2
+            }
+            const prob: IProblem = {
+                ...testProblem2
+            }
+            prob.source = PlatformName[1]
+            probModel.source = PlatformName[1]
+
+            req.params.problemId = probModel._id;
+            req.body = {
+                ...prob
+            };
+            req.body.title = "Updated title";
+            const problemToUpdate: IProblem = {
+                ...req.body,
+                problemId: probModel.problemId
+            };
+            const problemModelToUpdate = <IProblemModel>{
+                ...problemToUpdate,
+                _id: probModel._id,
+                __v: probModel.__v
+            };
+
+            stubs.problemDB.find.resolves(probModel);
+            stubs.problemDB.update.resolves(problemModelToUpdate);
+            stubs.problemUtil.calculateProblemHash.returns(
+                probModel.problemId
+            );
+            stubs.validators.validationResult.returns(
+                <any>emptyValidationError()
+            );
+
+            await problemController.update(req, mockRes);
+
+            sinon.assert.calledOnce(stubs.problemDB.update);
+            sinon.assert.calledOnce(stubs.problemUtil.calculateProblemHash);
+            sinon.assert.calledOnce(stubs.problemSetDB.updateProblemCount);
+            sinon.assert.calledWith(
+                stubs.problemUtil.calculateProblemHash,
+                probModel.source,
+                probModel.problemMetadata.platformProblemId
             );
 
             sinon.assert.calledWith(
