@@ -102,7 +102,6 @@ describe("Problems controller tests", () => {
         });
 
         it("status 404: returns an appropriate response if problem doesn't exist", async () => {
-            stubs.problemDB.find.resolves(null);
             stubs.validators.validationResult.returns(
                 <any>emptyValidationError()
             );
@@ -176,7 +175,6 @@ describe("Problems controller tests", () => {
         });
 
         it("status 404: returns an appropriate response if problem doesn't exist", async () => {
-            stubs.problemDB.findByGeneratedId.resolves(null);
             stubs.validators.validationResult.returns(
                 <any>emptyValidationError()
             );
@@ -240,7 +238,6 @@ describe("Problems controller tests", () => {
 
         it("status 200: returns successfully a created problem with no linked problem sets", async () => {
             stubs.problemDB.create.resolves(testProblemModel2);
-            stubs.problemSetDB.updateProblemCount.resolves(null);
             stubs.problemUtil.calculateProblemHash.returns(
                 testProblemModel2.problemId
             );
@@ -275,7 +272,6 @@ describe("Problems controller tests", () => {
 
         it("status 200: returns successfully a created problem with linked problem sets", async () => {
             stubs.problemDB.create.resolves(testProblemModel1);
-            stubs.problemSetDB.updateProblemCount.resolves(null);
             stubs.problemUtil.calculateProblemHash.returns(
                 testProblemModel1.problemId
             );
@@ -378,7 +374,6 @@ describe("Problems controller tests", () => {
 
             stubs.problemDB.find.resolves(testProblemModel2);
             stubs.problemDB.update.resolves(problemModelToUpdate);
-            stubs.problemSetDB.updateProblemCount.resolves(null);
             stubs.problemUtil.calculateProblemHash.returns(
                 testProblemModel2.problemId
             );
@@ -428,7 +423,6 @@ describe("Problems controller tests", () => {
 
             stubs.problemDB.find.resolves(testProblemModel1);
             stubs.problemDB.update.resolves(problemModelToUpdate);
-            stubs.problemSetDB.updateProblemCount.resolves(null);
             stubs.problemUtil.calculateProblemHash.returns(
                 testProblemModel1.problemId
             );
@@ -485,7 +479,6 @@ describe("Problems controller tests", () => {
 
             stubs.problemDB.find.resolves(testProblemModel1);
             stubs.problemDB.update.resolves(problemModelToUpdate);
-            stubs.problemSetDB.updateProblemCount.resolves(null);
             stubs.problemUtil.calculateProblemHash.returns(
                 testProblemModel2.problemId
             );
@@ -518,7 +511,6 @@ describe("Problems controller tests", () => {
         });
 
         it("status 404: returns an appropriate response if problem doesn't exist", async () => {
-            stubs.problemDB.find.resolves(null);
             stubs.validators.validationResult.returns(
                 <any>emptyValidationError()
             );
@@ -579,7 +571,6 @@ describe("Problems controller tests", () => {
         it("status 200: returns successfully upon deletion", async () => {
             stubs.problemDB.find.resolves(testProblemModel1);
             stubs.problemDB.delete.resolves(testProblemModel1);
-            stubs.problemSetDB.updateProblemCount.resolves(null);
             stubs.validators.validationResult.returns(
                 <any>emptyValidationError()
             );
@@ -609,7 +600,6 @@ describe("Problems controller tests", () => {
         });
 
         it("status 404: returns an appropriate response if problem doesn't exist", async () => {
-            stubs.problemDB.find.resolves(null);
             stubs.validators.validationResult.returns(
                 <any>emptyValidationError()
             );

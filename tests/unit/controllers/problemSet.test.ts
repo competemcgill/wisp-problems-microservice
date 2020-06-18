@@ -163,7 +163,6 @@ describe("Problem sets controller tests", () => {
         });
 
         it("status 404: returns an appropriate response if problem set doesn't exist", async () => {
-            stubs.problemSetDB.find.resolves(null);
             stubs.validators.validationResult.returns(
                 <any>emptyValidationError()
             );
@@ -367,7 +366,6 @@ describe("Problem sets controller tests", () => {
         });
 
         it("status 404: returns an appropriate response if problem set doesn't exist", async () => {
-            stubs.problemSetDB.find.resolves(null);
             stubs.validators.validationResult.returns(
                 <any>emptyValidationError()
             );
@@ -434,7 +432,6 @@ describe("Problem sets controller tests", () => {
             );
             stubs.problemSetDB.find.resolves(testProblemSetModel1);
             stubs.problemSetDB.delete.resolves(testProblemSetModel1);
-            stubs.problemDB.removeProblemSetId.resolves(null);
 
             await problemSetController.delete(req, mockRes);
 
@@ -461,9 +458,6 @@ describe("Problem sets controller tests", () => {
             stubs.validators.validationResult.returns(
                 <any>emptyValidationError()
             );
-            stubs.problemSetDB.find.resolves(null);
-            stubs.problemSetDB.delete.resolves(null);
-            stubs.problemDB.removeProblemSetId.resolves(null);
 
             await problemSetController.delete(req, mockRes);
 
@@ -490,9 +484,6 @@ describe("Problem sets controller tests", () => {
             stubs.validators.validationResult.returns(
                 <any>validationErrorWithMessage(errorMsg)
             );
-            stubs.problemSetDB.find.resolves(null);
-            stubs.problemSetDB.delete.resolves(null);
-            stubs.problemDB.removeProblemSetId.resolves(null);
 
             await problemSetController.delete(req, mockRes);
 

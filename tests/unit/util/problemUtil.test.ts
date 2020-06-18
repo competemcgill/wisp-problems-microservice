@@ -26,10 +26,6 @@ describe("Problems util tests", () => {
         };
     });
 
-    beforeEach(() => {
-        //
-    });
-
     afterEach(() => {
         sinon.reset();
     });
