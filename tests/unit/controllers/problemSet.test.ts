@@ -236,6 +236,7 @@ describe("Problem sets controller tests", () => {
             );
             await problemSetController.create(req, mockRes);
             sinon.assert.calledOnce(stubs.problemSetDB.create);
+            sinon.assert.calledOnce(stubs.axios.patch);
             sinon.assert.calledWith(stubs.problemSetDB.create, req.body);
             sinon.assert.calledWith(mockRes.status, statusCodes.SUCCESS);
             sinon.assert.calledWith(mockRes.json, testProblemSetModel1);
