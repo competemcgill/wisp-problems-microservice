@@ -1,5 +1,6 @@
 import sinon from "sinon";
 import { problemSetDBInteractionsStubs } from "../stubs/problemSet";
+import { axiosStubs } from "../stubs/util";
 import { problemSetController } from "../../../src/controllers/problemSet";
 import { mockReq, mockRes } from "sinon-express-mock";
 import { problemDBInteractionsStubs } from "../stubs/problem";
@@ -22,19 +23,22 @@ import {
 let stubs = {
     problemDB: problemDBInteractionsStubs(),
     problemSetDB: problemSetDBInteractionsStubs(),
-    validators: validatorStubs()
+    validators: validatorStubs(),
+    axios: axiosStubs()
 };
 
 stubs.problemDB.restore();
 stubs.problemSetDB.restore();
 stubs.validators.restore();
+stubs.axios.restore();
 
 describe("Problem sets controller tests", () => {
     before(() => {
         stubs = {
             problemDB: problemDBInteractionsStubs(),
             problemSetDB: problemSetDBInteractionsStubs(),
-            validators: validatorStubs()
+            validators: validatorStubs(),
+            axios: axiosStubs()
         };
     });
 
@@ -51,6 +55,7 @@ describe("Problem sets controller tests", () => {
         stubs.problemDB.restore();
         stubs.problemSetDB.restore();
         stubs.validators.restore();
+        stubs.axios.restore();
     });
 
     describe("Index", () => {
