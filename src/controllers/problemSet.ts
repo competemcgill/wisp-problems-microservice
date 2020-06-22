@@ -1,3 +1,4 @@
+import axios from "axios";
 import { Request, Response } from "express";
 import { problemSetDBInteractions } from "../database/interactions/problemSet";
 import { problemDBInteractions } from "../database/interactions/problem";
@@ -85,6 +86,11 @@ const problemSetController = {
                 const newProblemSet: IProblemSetModel = await problemSetDBInteractions.create(
                     problemSetData
                 );
+
+                await axios.patch(
+                    `${process.env.WISP_USERS_URL}/users/resetLastSubmissions`
+                );
+
                 res.status(statusCodes.SUCCESS).json(newProblemSet);
             } catch (error) {
                 res.status(statusCodes.SERVER_ERROR).json(error);
