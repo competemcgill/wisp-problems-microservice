@@ -9,6 +9,7 @@ on:
 env:
   GITHUB_SHA: ${{ github.sha }}
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
   DOCKER_ORGANIZATION: ${{ secrets.DOCKER_ORGANIZATION }} 
   PROJECT_ID: ${{ secrets.GKE_PROJECT }}
   GKE_CLUSTER: wisp-prod
@@ -60,3 +61,12 @@ jobs:
     - name: Deploy
       run: |-
         kubectl -n dev set image deploy/$IMAGE $IMAGE=$DOCKER_ORGANIZATION/$IMAGE:dev-$(echo ${GITHUB_SHA} | cut -c1-8)
+
+  e2e:
+    needs: setup-build-tag-publish-deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: wget https://raw.githubusercontent.com/Compete-McGill/wisp/master/e2e/docker-compose.yaml -O docker-compose.e2e.yaml
+      - run: docker login -u=$DOCKER_USERNAME -p=$DOCKER_PASSWORD
+      - run: docker-compose -f docker-compose.e2e.yaml up --abort-on-container-exit
