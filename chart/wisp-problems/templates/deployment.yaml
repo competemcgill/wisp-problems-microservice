@@ -33,5 +33,5 @@ spec:
             - name: "WISP_USERS_URL"
               valueFrom:
                 configMapKeyRef:
-                  name: "problems-configmap"
+                  name: {{ include "wisp-problems.fullname" . }}-configmap
                   key: "WISP_USERS_URL"
