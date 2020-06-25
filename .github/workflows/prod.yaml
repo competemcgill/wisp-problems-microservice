@@ -17,7 +17,7 @@ env:
   IMAGE: wisp-problems
 
 jobs:
-  setup-build-tag-publish:
+  setup-build-tag-publish-deploy:
     name: Setup, Build, Tag, and Publish
     runs-on: ubuntu-latest
     steps:
@@ -25,6 +25,19 @@ jobs:
     # Checkout Commit
     - name: Checkout
       uses: actions/checkout@v2
+
+    # Setup gcloud CLI
+    - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      with:
+        service_account_key: ${{ secrets.GKE_SA_KEY }}
+        project_id: ${{ secrets.GKE_PROJECT }}
+
+    # Configure Docker to use the gcloud command-line tool as a credential
+    # helper for authentication
+    - run: |-
+        gcloud --quiet auth configure-docker
+    - run: |-
+        gcloud container clusters get-credentials "$GKE_CLUSTER" --zone "$GKE_ZONE"
 
     # Build the Docker image
     - name: Build
