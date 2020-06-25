@@ -57,10 +57,17 @@ jobs:
       env:
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
-    # Deploy the Docker image to the GKE cluster
+    # Install helm for use in pipeline
+    - name: Install helm
+      run: |
+        wget -q -O get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
+        chmod 700 get_helm.sh
+        ./get_helm.sh
+
+    # Deploy to GKE cluster using helm
     - name: Deploy
       run: |-
-        kubectl -n dev set image deploy/$IMAGE $IMAGE=$DOCKER_ORGANIZATION/$IMAGE:dev-$(echo ${GITHUB_SHA} | cut -c1-8)
+        helm upgrade --atomic --install dev-problems ./chart/wisp-problems/ --namespace dev --set image.tag=dev-$(echo ${GITHUB_SHA} | cut -c1-8)
 
   e2e:
     needs: setup-build-tag-publish-deploy
