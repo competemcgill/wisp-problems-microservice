@@ -9,7 +9,11 @@ on:
 env:
   GITHUB_SHA: ${{ github.sha }}
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
   DOCKER_ORGANIZATION: ${{ secrets.DOCKER_ORGANIZATION }} 
+  PROJECT_ID: ${{ secrets.GKE_PROJECT }}
+  GKE_CLUSTER: wisp-prod
+  GKE_ZONE: northamerica-northeast1-c
   IMAGE: wisp-problems
 
 jobs:
@@ -39,3 +43,15 @@ jobs:
         docker push $DOCKER_ORGANIZATION/$IMAGE
       env:
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+    # Install helm for use in pipeline
+    - name: Install helm
+      run: |
+        wget -q -O get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
+        chmod 700 get_helm.sh
+        ./get_helm.sh
+
+    # Deploy to GKE cluster using helm
+    - name: Deploy
+      run: |-
+        helm upgrade --atomic --install prod-problems ./chart/wisp-problems/ --namespace prod --set image.tag=$(echo ${GITHUB_SHA} | cut -c1-8) --set replicaCount=2
