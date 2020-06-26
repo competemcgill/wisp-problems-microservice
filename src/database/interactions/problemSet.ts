@@ -9,7 +9,7 @@ export const problemSetDBInteractions = {
     },
 
     all: (): Promise<IProblemSetModel[]> => {
-        return ProblemSet.find().exec();
+        return ProblemSet.find().sort({ createdAt: -1 }).exec();
     },
 
     find: (problemSetId: string): Promise<IProblemSetModel> => {

@@ -34,6 +34,10 @@ const problemSchema: Schema = new Schema(
     }
 );
 
+problemSchema.index({
+    createdAt: 1
+});
+
 const Problem: Model<IProblemModel> = model("Problem", problemSchema);
 
 export { Problem };
