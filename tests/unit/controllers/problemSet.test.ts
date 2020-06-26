@@ -1,5 +1,6 @@
 import sinon from "sinon";
 import { problemSetDBInteractionsStubs } from "../stubs/problemSet";
+import { axiosStubs } from "../stubs/util";
 import { problemSetController } from "../../../src/controllers/problemSet";
 import { mockReq, mockRes } from "sinon-express-mock";
 import { problemDBInteractionsStubs } from "../stubs/problem";
@@ -22,19 +23,22 @@ import {
 let stubs = {
     problemDB: problemDBInteractionsStubs(),
     problemSetDB: problemSetDBInteractionsStubs(),
-    validators: validatorStubs()
+    validators: validatorStubs(),
+    axios: axiosStubs()
 };
 
 stubs.problemDB.restore();
 stubs.problemSetDB.restore();
 stubs.validators.restore();
+stubs.axios.restore();
 
 describe("Problem sets controller tests", () => {
     before(() => {
         stubs = {
             problemDB: problemDBInteractionsStubs(),
             problemSetDB: problemSetDBInteractionsStubs(),
-            validators: validatorStubs()
+            validators: validatorStubs(),
+            axios: axiosStubs()
         };
     });
 
@@ -51,6 +55,7 @@ describe("Problem sets controller tests", () => {
         stubs.problemDB.restore();
         stubs.problemSetDB.restore();
         stubs.validators.restore();
+        stubs.axios.restore();
     });
 
     describe("Index", () => {
@@ -124,7 +129,7 @@ describe("Problem sets controller tests", () => {
             stubs.validators.validationResult.returns(
                 <any>emptyValidationError()
             );
-            req.params.problemSetId = "exampleProblemSetMongoId1";
+            req.params.problemSetId = testProblemSetModel1._id;
             await problemSetController.show(req, mockRes);
             sinon.assert.calledOnce(stubs.problemSetDB.find);
             sinon.assert.notCalled(stubs.problemDB.listByProblemSet);
@@ -142,7 +147,7 @@ describe("Problem sets controller tests", () => {
             stubs.validators.validationResult.returns(
                 <any>emptyValidationError()
             );
-            req.params.problemSetId = "exampleProblemSetMongoId1";
+            req.params.problemSetId = testProblemSetModel1._id;
             req.query.includeProblems = "true";
             await problemSetController.show(req, mockRes);
             sinon.assert.calledOnce(stubs.problemSetDB.find);
@@ -162,8 +167,7 @@ describe("Problem sets controller tests", () => {
             );
         });
 
-        it("status 404: returns an appropriate response if user doesn't exist", async () => {
-            stubs.problemSetDB.find.resolves(null);
+        it("status 404: returns an appropriate response if problem set doesn't exist", async () => {
             stubs.validators.validationResult.returns(
                 <any>emptyValidationError()
             );
@@ -232,6 +236,7 @@ describe("Problem sets controller tests", () => {
             );
             await problemSetController.create(req, mockRes);
             sinon.assert.calledOnce(stubs.problemSetDB.create);
+            sinon.assert.calledOnce(stubs.axios.patch);
             sinon.assert.calledWith(stubs.problemSetDB.create, req.body);
             sinon.assert.calledWith(mockRes.status, statusCodes.SUCCESS);
             sinon.assert.calledWith(mockRes.json, testProblemSetModel1);
@@ -366,8 +371,7 @@ describe("Problem sets controller tests", () => {
             sinon.assert.calledWith(mockRes.json, updatedUser);
         });
 
-        it("status 404: returns an appropriate response if user doesn't exist", async () => {
-            stubs.problemSetDB.find.resolves(null);
+        it("status 404: returns an appropriate response if problem set doesn't exist", async () => {
             stubs.validators.validationResult.returns(
                 <any>emptyValidationError()
             );
@@ -439,6 +443,7 @@ describe("Problem sets controller tests", () => {
 
             sinon.assert.calledOnce(stubs.problemSetDB.find);
             sinon.assert.calledOnce(stubs.problemSetDB.delete);
+            sinon.assert.calledOnce(stubs.problemDB.removeProblemSetId);
             sinon.assert.calledWith(
                 stubs.problemSetDB.find,
                 req.params.problemSetId
@@ -447,21 +452,24 @@ describe("Problem sets controller tests", () => {
                 stubs.problemSetDB.delete,
                 req.params.problemSetId
             );
+            sinon.assert.calledWith(
+                stubs.problemDB.removeProblemSetId,
+                testProblemSetModel1._id
+            );
             sinon.assert.calledWith(mockRes.status, statusCodes.SUCCESS);
             sinon.assert.calledWith(mockRes.json);
         });
 
-        it("status 404: returns an appropriate response if user doesn't exist", async () => {
+        it("status 404: returns an appropriate response if problem set doesn't exist", async () => {
             stubs.validators.validationResult.returns(
                 <any>emptyValidationError()
             );
-            stubs.problemSetDB.find.resolves(null);
-            stubs.problemSetDB.delete.resolves(null);
 
             await problemSetController.delete(req, mockRes);
 
             sinon.assert.calledOnce(stubs.problemSetDB.find);
             sinon.assert.notCalled(stubs.problemSetDB.delete);
+            sinon.assert.notCalled(stubs.problemDB.removeProblemSetId);
             sinon.assert.calledWith(
                 stubs.problemSetDB.find,
                 req.params.problemSetId
@@ -482,14 +490,13 @@ describe("Problem sets controller tests", () => {
             stubs.validators.validationResult.returns(
                 <any>validationErrorWithMessage(errorMsg)
             );
-            stubs.problemSetDB.find.resolves(null);
-            stubs.problemSetDB.delete.resolves(null);
 
             await problemSetController.delete(req, mockRes);
 
             sinon.assert.calledOnce(stubs.validators.validationResult);
             sinon.assert.notCalled(stubs.problemSetDB.find);
             sinon.assert.notCalled(stubs.problemSetDB.delete);
+            sinon.assert.notCalled(stubs.problemDB.removeProblemSetId);
             sinon.assert.calledWith(mockRes.status, statusCodes.MISSING_PARAMS);
             sinon.assert.calledWith(mockRes.json, errorMsg);
         });

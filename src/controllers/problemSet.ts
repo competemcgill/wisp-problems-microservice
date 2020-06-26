@@ -1,3 +1,4 @@
+import axios from "axios";
 import { Request, Response } from "express";
 import { problemSetDBInteractions } from "../database/interactions/problemSet";
 import { problemDBInteractions } from "../database/interactions/problem";
@@ -54,13 +55,6 @@ const problemSetController = {
                     });
                 }
 
-                if (!problemSet) {
-                    return res.status(statusCodes.NOT_FOUND).json({
-                        status: statusCodes.NOT_FOUND,
-                        message: "ProblemSet not found"
-                    });
-                }
-
                 // TODO: find a non-hacky way to include IProblem[] array optionally into response with interface
                 const result: any = problemSet["_doc"];
                 if (req.query.includeProblems == "true") {
@@ -92,6 +86,11 @@ const problemSetController = {
                 const newProblemSet: IProblemSetModel = await problemSetDBInteractions.create(
                     problemSetData
                 );
+
+                await axios.patch(
+                    `${process.env.WISP_USERS_URL}/users/resetLastSubmissions`
+                );
+
                 res.status(statusCodes.SUCCESS).json(newProblemSet);
             } catch (error) {
                 res.status(statusCodes.SERVER_ERROR).json(error);
@@ -152,6 +151,9 @@ const problemSetController = {
                     });
                 } else {
                     await problemSetDBInteractions.delete(problemSetId);
+                    await problemDBInteractions.removeProblemSetId(
+                        problemSetId
+                    );
                     res.status(statusCodes.SUCCESS).json();
                 }
             } catch (error) {

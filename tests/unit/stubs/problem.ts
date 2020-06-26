@@ -20,6 +20,10 @@ export const problemDBInteractionsStubs = () => {
             "findByGeneratedId"
         ),
         update: sinon.stub(problemDBInteractions, "update"),
+        removeProblemSetId: sinon.stub(
+            problemDBInteractions,
+            "removeProblemSetId"
+        ),
         delete: sinon.stub(problemDBInteractions, "delete"),
 
         restore() {
@@ -31,6 +35,7 @@ export const problemDBInteractionsStubs = () => {
             this.findByProblemNumberAndPlatform.restore();
             this.findByGeneratedId.restore();
             this.update.restore();
+            this.removeProblemSetId.restore();
             this.delete.restore();
         }
     };

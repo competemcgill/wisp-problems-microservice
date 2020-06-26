@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "wisp-problems.fullname" . }}
+  labels:
+    {{- include "wisp-problems.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "wisp-problems.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "wisp-problems.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          env:
+            - name: "DB_URL"
+              valueFrom:
+                secretKeyRef:
+                  key: "DB_URL"
+                  name: "db-secrets"
+            - name: "WISP_USERS_URL"
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "wisp-problems.fullname" . }}-configmap
+                  key: "WISP_USERS_URL"
