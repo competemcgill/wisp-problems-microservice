@@ -3,3 +3,4 @@ dist/
 site/
 .env
 .nyc_output/
+.idea
