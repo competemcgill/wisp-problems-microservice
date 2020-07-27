@@ -8,7 +8,7 @@ export const problemDBInteractions = {
     },
 
     all: (): Promise<IProblemModel[]> => {
-        return Problem.find().exec();
+        return Problem.find().sort({ createdAt: -1 }).exec();
     },
 
     find: (problemId: string): Promise<IProblemModel> => {

@@ -17,6 +17,10 @@ const problemSetSchema: Schema = new Schema(
     }
 );
 
+problemSetSchema.index({
+    createdAt: 1
+});
+
 const ProblemSet: Model<IProblemSetModel> = model(
     "ProblemSet",
     problemSetSchema
