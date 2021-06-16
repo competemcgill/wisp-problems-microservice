@@ -13,7 +13,7 @@ env:
   DOCKER_ORGANIZATION: ${{ secrets.DOCKER_ORGANIZATION }} 
   PROJECT_ID: ${{ secrets.GKE_PROJECT }}
   GKE_CLUSTER: ${{ secrets.GKE_CLUSTER }}
-  GKE_ZONE: northamerica-northeast1-c
+  GKE_ZONE: ${{ secrets.GKE_ZONE }}
   IMAGE: wisp-problems
 
 jobs:
@@ -26,7 +26,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-      # Setup gcloud CLI
+    # Setup gcloud CLI
     - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
       with:
         service_account_key: ${{ secrets.GKE_SA_KEY }}
