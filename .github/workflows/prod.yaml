@@ -12,8 +12,8 @@ env:
   DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
   DOCKER_ORGANIZATION: ${{ secrets.DOCKER_ORGANIZATION }} 
   PROJECT_ID: ${{ secrets.GKE_PROJECT }}
-  GKE_CLUSTER: wisp-prod
-  GKE_ZONE: northamerica-northeast1-c
+  GKE_CLUSTER: ${{ secrets.GKE_CLUSTER }}
+  GKE_ZONE: ${{ secrets.GKE_ZONE }}
   IMAGE: wisp-problems
 
 jobs:
